@@ -82,6 +82,19 @@ export class SurveyComponent implements OnInit {
   }
 
   timeup() {
+    var survey_data: any = {};
+      survey_data['user_id'] = this.user_id;
+      survey_data['movie_data'] = this.movies.slice(0, this.movies_index);
+      survey_data['movies_reviewed'] = this.movies_reviewed;
+      survey_data['time_choice'] = this.time_choice;
+      survey_data['name_data'] = this.names.slice(0, this.names_index);
+      survey_data['movies_selected'] = this.movies_selected;
+      var date = new Date();
+      survey_data['timestamp'] = date.toISOString();
+      console.log(survey_data);
+    this.surveyService.postSurveyData(survey_data).subscribe({
+      next: data =>{}
+    }); 
     let navigationExtras: NavigationExtras = {
       queryParams: {
         "user_id":this.user_id,
