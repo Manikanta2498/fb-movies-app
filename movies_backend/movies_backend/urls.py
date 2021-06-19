@@ -8,6 +8,7 @@ urlpatterns = [
     url(r'^$', views.index, name='home'),
     url(r'^admin/', admin.site.urls),
     url(r'^getuserid/',views.getUserID),
+    url(r'^postip',views.postIP),
     url(r'^postuserinfo',views.postUserInfo),
     url(r'^postsurvey',views.postSurveyData),
     url(r'^postfeedback',views.postFeedbackData),

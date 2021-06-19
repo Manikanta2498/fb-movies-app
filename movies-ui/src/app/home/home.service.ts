@@ -20,4 +20,14 @@ export class HomeService {
     return this.http.get<any[]>(url).pipe(
       tap(response => {}));
   }
+  public getIPAddress()  
+  {  
+    return this.http.get("http://api.ipify.org/?format=json");  
+  }  
+  postIP(data: any): Observable<any> {
+    let url = this.base_url +'postip/';
+    const headers = { 'Content-Type': 'text/plain' };
+    return this.http.post<any[]>(url, data ,{ headers }).pipe(
+      tap(response => {}));
+  }
 }

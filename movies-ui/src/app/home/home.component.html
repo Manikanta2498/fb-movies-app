@@ -1,4 +1,12 @@
-<div class="note" *ngIf="consent_page && dynamic_content && user_id">
+<div *ngIf="!dynamic_content">
+    <div nz-row nzJustify="center" nzAlign="middle">
+        <div nz-col nzSpan="2" style="padding-top: 15%">
+            <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
+        </div>
+    </div>
+</div>
+
+<div class="note" *ngIf="dynamic_content">
     <div nz-row nzJustify="center">
         <div nz-col nzSpan="22">
             <nz-card nzTitle="Consent for Participation in Research study">

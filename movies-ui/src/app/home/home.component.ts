@@ -11,6 +11,7 @@ import {HomeService} from './home.service';
 })
 export class HomeComponent implements OnInit {
 
+  user_ipAddress: string;
   user_id: string;
   dynamic_content: any;
   consent_page: boolean = true;
@@ -28,16 +29,26 @@ export class HomeComponent implements OnInit {
   }
   ngOnInit(){
     this.router.navigateByUrl('', { skipLocationChange: true });
-    this.homeService.getUserID().subscribe({
-      next: data => {
-        this.user_id = data;
-      }
-    })
-    this.homeService.getDynamics().subscribe({
-      next: data => {
-        this.dynamic_content = data;
-      }
-    })
+    this.homeService.getIPAddress().subscribe((res:any)=>{  
+      this.user_ipAddress =res.ip;  
+      this.homeService.postIP(this.user_ipAddress).subscribe({
+        next: data =>{
+          if (data == 0){
+            this.router.navigate(['/exit'], {skipLocationChange: true});
+          }
+        }
+      });
+      this.homeService.getUserID().subscribe({
+        next: data => {
+          this.user_id = data;
+        }
+      });
+      this.homeService.getDynamics().subscribe({
+        next: data => {
+          this.dynamic_content = data;
+        }
+      });
+    });  
   }
 
 }

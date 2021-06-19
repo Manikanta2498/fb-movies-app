@@ -11,8 +11,18 @@ import ast
 import random
 import string
 
+IPs = []
+
 def index(request):
     return HttpResponse("Hello, world. You're at the Movies index.")
+
+@api_view(["POST"])
+def postIP(data):
+    data = data.body.decode("utf-8")
+    if data in IPs:
+        return JsonResponse(0,safe=False)
+    else:
+        return JsonResponse(1,safe=False)
 
 @api_view(["GET"])
 def getUserID(request):
