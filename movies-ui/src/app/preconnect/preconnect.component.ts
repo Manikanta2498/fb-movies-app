@@ -11,11 +11,11 @@ export class PreconnectComponent implements OnInit {
   dynamic_content: any;
   preconnect1: any;
   preconnect2: any;
-  form: any;
+  user_id: string;
   time_choice: boolean;
   constructor(private router: Router,private route: ActivatedRoute) {
     this.route.queryParams.subscribe(params => {
-      this.form = JSON.parse(params['form']);
+      this.user_id = params['user_id'];
       this.dynamic_content = JSON.parse(params['dynamic_content']);
       this.preconnect1 = this.dynamic_content['preconnect1'];
       this.preconnect2 = this.dynamic_content['preconnect2'];
@@ -25,22 +25,12 @@ export class PreconnectComponent implements OnInit {
   confirm(): void {
     let navigationExtras: NavigationExtras = {
       queryParams: {
-        "form":JSON.stringify(this.form),
+        "user_id":this.user_id,
         "time_choice":this.time_choice,
-        "dynamic_content": JSON.stringify(this.dynamic_content),
       },
       skipLocationChange: true,
     };
     this.router.navigate(['/survey'],navigationExtras);
-  }
-
-  @HostListener('window:beforeunload', ['$event'])
-   onWindowClose(event: any): void {
-    // Do something
-
-     event.preventDefault();
-     event.returnValue = false;
-
   }
 
   ngOnInit(): void {

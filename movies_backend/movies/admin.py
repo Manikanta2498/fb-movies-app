@@ -1,10 +1,14 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Lname,Fname,Dynamic,Movie,User
+from .models import Lname,Fname,Dynamic,Movie,User,Output
 
 myModels = [Dynamic]
 admin.site.register(myModels)
+
+class OutputAdmin(admin.ModelAdmin):
+    list_display = ('user_id', 'order_no','movie_title','clicked','rec_first_name','rec_last_name','readmore_count')
+admin.site.register(Output, OutputAdmin)
 
 class FnameAdmin(admin.ModelAdmin):
     list_display = ('first_name', 'race','gender')

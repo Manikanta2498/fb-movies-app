@@ -54,7 +54,7 @@ export class InfoComponent implements OnInit {
   confirm(): void {
     let navigationExtras: NavigationExtras = {
       queryParams: {
-        "form":JSON.stringify(this.validateForm.value),
+        "user_id":this.user_id,
         "dynamic_content": JSON.stringify(this.dynamic_content)
       },
       skipLocationChange: true,
@@ -70,6 +70,7 @@ export class InfoComponent implements OnInit {
     return null;
   }
   ngOnInit(): void {
+    window.scroll(0,0);
     this.validateForm = this.fb.group({
       age: [null, [this.ageRangeValidator]],
       internet: [null, [Validators.required]],

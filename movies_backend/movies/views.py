@@ -4,7 +4,8 @@ from django.http.response import JsonResponse
 from django.forms.models import model_to_dict
 from rest_framework.decorators import api_view
 
-from movies.models import Dynamic, Fname, Lname, Movie, User
+from movies.models import Dynamic, Fname, Lname, Movie, Output, User
+import dateutil.parser 
 import json
 import ast
 import random
@@ -17,9 +18,80 @@ def index(request):
 def getUserID(request):
     r = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(10)])
     if len(User.objects.all()) > 0:
-        while (len(User.objects.get(user_id=r)) != 0):
+        while (len(User.objects.filter(user_id=r)) != 0):
             r = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(10)])
     return JsonResponse(r,safe=False)
+
+@api_view(["POST"])
+def postSurveyData(data):
+    data = json.loads(data.body.decode("utf-8"))
+    try:
+        movies_selected = []
+        for movie in data['movies_selected']:
+            if data['movies_selected'].get(movie):
+                movies_selected.append(movie)
+        movies_reviewed = data['movies_reviewed']
+        for i in range(len(data['movie_data'])-1,-1,-1):
+            movie_data = data['movie_data'][i]
+            name_data = data['name_data'][i]
+            fname = Fname.objects.filter(first_name=name_data['fname'])[0]
+            clicked = 1 if str(i) in movies_selected else 0
+            readmore_count = movies_reviewed.get(str(i)) if movies_reviewed.get(str(i)) else 0
+            timed = 1 if data["time_choice"] == True else 0
+            output_instance = Output.objects.create(
+                user_id = data["user_id"],
+                order_no = i+1,
+                movie_title = movie_data["title"],
+                rating = movie_data["rating"],
+                review = movie_data["review"],
+                clicked = clicked,
+                readmore_count = readmore_count,
+                timestamp = data["timestamp"],
+                timed = timed,
+                rec_first_name = fname.first_name,
+                rec_last_name = name_data['lname'],
+                rec_race = fname.race,
+                rec_gender = fname.gender,
+            )
+            user = User.objects.get(user_id=data["user_id"])
+            user.test_type = timed
+            user.save()
+        return JsonResponse('Post Info Success',safe=False)
+    except Exception as e:
+        print(e)
+        return JsonResponse('Post Info Failed',safe=False)
+
+@api_view(["POST"])
+def postFeedbackData(data):
+    data = json.loads(data.body.decode("utf-8"))
+    try:
+        user_id = data["user_id"]
+        user = User.objects.get(user_id=user_id)
+        user.feedback_rate = data["rate"]
+        user.feedback_satisfied = data["satisfied"]
+        user.feedback_rely = data["rely"]
+        user.feedback_likely = data["likely"]
+        user.feedback_study = data["study"]
+        user.feedback_share = data["share"]
+        user.time_spent = str((dateutil.parser.parse(data["user_exit_time"])-user.user_entry_time).total_seconds())
+        user.save()
+        return JsonResponse('Post Feedback Success',safe=False)
+    except Exception as e:
+        print(e)
+        return JsonResponse('Post Feedback Failed',safe=False)
+
+@api_view(["POST"])
+def postMovieLink(data):
+    data = json.loads(data.body.decode("utf-8"))
+    try:
+        user_id = data["user_id"]
+        user = User.objects.get(user_id=user_id)
+        user.movie_link_clicked = 1
+        user.save()
+        return JsonResponse('Post Movie Link Success',safe=False)
+    except Exception as e:
+        print(e)
+        return JsonResponse('Post Movie Link Failed',safe=False)
 
 @api_view(["POST"])
 def postUserInfo(data):
@@ -61,6 +133,14 @@ def getMovies(data):
 @api_view(["GET"])
 def getDynamics(request):
     return JsonResponse(model_to_dict(Dynamic.objects.first()),safe=False)
+
+@api_view(["GET"])
+def getMoviesCount(request):
+    return JsonResponse(len(Movie.objects.all()),safe=False)
+
+@api_view(["GET"])
+def getFNamesCount(request):
+    return JsonResponse(len(Fname.objects.all()),safe=False)
 
 @api_view(["GET"])
 def createFnames(request):

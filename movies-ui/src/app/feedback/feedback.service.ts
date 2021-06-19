@@ -6,17 +6,12 @@ import { throwError, Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class ThanksService {
+export class FeedbackService {
 
+  base_url: string = 'http://localhost:8000/';
   constructor(private http: HttpClient) { }
-  base_url: string = 'http://localhost:8000/'
-  getDynamics(): Observable<any> {
-    let url = this.base_url +'getdynamics/';
-    return this.http.get<any[]>(url).pipe(
-      tap(response => {}));
-  }
-  postMovieLink(data: any): Observable<any> {
-    let url = this.base_url +'postmovielink/';
+  postFeedbackData(data: any): Observable<any> {
+    let url = this.base_url +'postfeedback/';
     const headers = { 'Content-Type': 'text/plain' };
     return this.http.post<any[]>(url, data ,{ headers }).pipe(
       tap(response => {}));
