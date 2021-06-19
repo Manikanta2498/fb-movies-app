@@ -1,0 +1,45 @@
+from django.db import models
+
+class Dynamic(models.Model):
+    compensation = models.CharField(max_length=10)
+    instructions = models.TextField()
+    preconnect1 = models.TextField()
+    preconnect2 = models.TextField()
+    thankyou_code = models.CharField(max_length=20)
+
+class Movie(models.Model):
+    title = models.CharField(max_length=100)
+    review = models.TextField()
+    link = models.CharField(max_length=100)
+    rating = models.CharField(max_length=2)
+    image_url = models.CharField(max_length=200)
+
+class Fname(models.Model):
+    first_name = models.CharField(max_length=200)
+    race = models.CharField(max_length=200)
+    gender = models.CharField(max_length=6)
+
+class Lname(models.Model):
+    last_name = models.CharField(max_length=200)
+    race = models.CharField(max_length=200)
+
+class User(models.Model):
+    user_id = models.CharField(max_length=10)
+    user_race = models.CharField(max_length=200)
+    user_gender = models.CharField(max_length=6)
+    user_age = models.IntegerField()
+    user_education = models.CharField(max_length=200)
+    user_frequency = models.CharField(max_length=200)
+    user_genre = models.CharField(max_length=200)
+    user_race = models.CharField(max_length=200)
+    test_type = models.IntegerField(null=True)
+    user_entry_time = models.CharField(max_length=200)
+    time_spent = models.CharField(max_length=200,null=True)
+    feedback_rate = models.IntegerField(null=True)
+    feedback_satisfied = models.IntegerField(null=True)
+    feedback_likely = models.IntegerField(null=True)
+    feedback_relay = models.IntegerField(null=True)
+    feedback_think = models.IntegerField(null=True)
+    feedback_study = models.IntegerField(null=True)
+    movie_link_clicked = models.IntegerField(null=True)
+
