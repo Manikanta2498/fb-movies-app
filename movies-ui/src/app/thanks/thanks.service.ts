@@ -9,7 +9,8 @@ import { throwError, Observable } from 'rxjs';
 export class ThanksService {
 
   constructor(private http: HttpClient) { }
-  base_url: string = 'http://localhost:8000/'
+  // base_url: string = 'http://localhost:8000/'
+  base_url: string = 'http://3.235.24.209:8000/'
   getDynamics(): Observable<any> {
     let url = this.base_url +'getdynamics/';
     return this.http.get<any[]>(url).pipe(
