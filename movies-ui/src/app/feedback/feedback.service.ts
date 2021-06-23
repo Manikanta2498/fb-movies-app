@@ -9,7 +9,7 @@ import { throwError, Observable } from 'rxjs';
 export class FeedbackService {
 
   // base_url: string = 'http://localhost:8000/'
-  base_url: string = 'http://3.235.24.209:8000/';
+  base_url: string = 'http://34.239.255.245/';
   constructor(private http: HttpClient) { }
   postFeedbackData(data: any): Observable<any> {
     let url = this.base_url +'postfeedback/';
