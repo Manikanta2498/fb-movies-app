@@ -22,6 +22,7 @@ ALLOWED_HOSTS = ['34.239.255.245','localhost']
 INSTALLED_APPS = [
     'corsheaders',
     'rest_framework',
+    'import_export',
     'movies.apps.MoviesConfig',
     'django.contrib.admin',
     'django.contrib.auth',
