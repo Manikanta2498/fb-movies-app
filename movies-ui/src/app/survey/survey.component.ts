@@ -157,10 +157,17 @@ export class SurveyComponent implements OnInit {
       this.surveyService.postSurveyData(survey_data).subscribe({
         next: data =>{}
       }); 
+      var movie_links = [];
+      for(var i in this.movies_selected){
+          if (this.movies_selected[i] == true){
+              movie_links.push(this.movies[parseInt(i)]['link']);
+          }
+      }
       let navigationExtras: NavigationExtras = {
         queryParams: {
           "time_choice":this.time_choice,
           "user_id":this.user_id,
+          "movie_links":movie_links,
         },
         skipLocationChange: true,
       };

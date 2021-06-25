@@ -12,11 +12,23 @@ import {ThanksService} from './thanks.service';
 export class ThanksComponent implements OnInit {
   user_id: string;
   code: string;
+  final_movie: any;
+  movie_flag: boolean = false;
   constructor(private notification: NzNotificationService,
               private thanks_service: ThanksService,
               private route: ActivatedRoute) {
     this.route.queryParams.subscribe(params => {
       this.user_id = params['user_id'];
+      var movie_links = params['movie_links'];
+      if (movie_links.length == 1) {
+        this.movie_flag = true;
+        this.final_movie = movie_links[0];
+      }
+      else if (movie_links.length == 2) {
+        this.movie_flag = true;
+        var rand = Math.floor(Math.random() * 2);
+        this.final_movie = movie_links[rand];
+      }
     });
   }
 

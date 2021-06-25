@@ -13,12 +13,14 @@ export class FeedbackComponent implements OnInit {
   tooltips = ['terrible', 'very bad', 'bad', 'normal', 'good', 'very good' ,'wonderful'];
   validateForm!: FormGroup;
   user_id: string;
+  movie_links: any[];
   constructor(private fb: FormBuilder,
               private feedbackservice: FeedbackService,
               private router: Router,
               private route: ActivatedRoute) {
     this.route.queryParams.subscribe(params => {
       this.user_id = params['user_id'];
+      this.movie_links = params['movie_links'];
     });
   }
 
@@ -37,6 +39,7 @@ export class FeedbackComponent implements OnInit {
     let navigationExtras: NavigationExtras = {
       queryParams: {
         "user_id":this.user_id,
+        "movie_links":this.movie_links,
       },
       skipLocationChange: true,
     };
