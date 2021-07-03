@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^getuserid/',views.getUserID),
     url(r'^postip',views.postIP),
     url(r'^postuserinfo',views.postUserInfo),
+    url(r'^postusertesttype',views.postUserTestType),
     url(r'^postsurvey',views.postSurveyData),
     url(r'^postfeedback',views.postFeedbackData),
     url(r'^postmovielink',views.postMovieLink),

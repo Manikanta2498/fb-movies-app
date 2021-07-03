@@ -29,21 +29,23 @@ export class FeedbackComponent implements OnInit {
       this.validateForm.controls[i].markAsDirty();
       this.validateForm.controls[i].updateValueAndValidity();
     }
-    var date = new Date();
-    this.validateForm.value['user_id'] = this.user_id;
-    this.validateForm.value['user_exit_time'] = date.toISOString();
-    this.feedbackservice.postFeedbackData(this.validateForm.value).subscribe({
-      next: data =>{}
-    }); 
-    console.log(this.validateForm.value);
-    let navigationExtras: NavigationExtras = {
-      queryParams: {
-        "user_id":this.user_id,
-        "movie_links":this.movie_links,
-      },
-      skipLocationChange: true,
-    };
-    this.router.navigate(['/thanks'],navigationExtras);
+    if (this.validateForm.valid) {
+      var date = new Date();
+      this.validateForm.value['user_id'] = this.user_id;
+      this.validateForm.value['user_exit_time'] = date.toISOString();
+      this.feedbackservice.postFeedbackData(this.validateForm.value).subscribe({
+        next: data =>{}
+      }); 
+      console.log(this.validateForm.value);
+      let navigationExtras: NavigationExtras = {
+        queryParams: {
+          "user_id":this.user_id,
+          "movie_links":this.movie_links,
+        },
+        skipLocationChange: true,
+      };
+      this.router.navigate(['/thanks'],navigationExtras);
+    }
   }
   
   ngOnInit(): void {

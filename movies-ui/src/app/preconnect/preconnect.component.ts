@@ -1,5 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { PreconnectService } from './preconnect.service';
 
 @Component({
   selector: 'app-preconnect',
@@ -13,7 +14,7 @@ export class PreconnectComponent implements OnInit {
   preconnect2: any;
   user_id: string;
   time_choice: boolean;
-  constructor(private router: Router,private route: ActivatedRoute) {
+  constructor(private router: Router,private route: ActivatedRoute,private preconnectService: PreconnectService) {
     this.route.queryParams.subscribe(params => {
       this.user_id = params['user_id'];
       this.dynamic_content = JSON.parse(params['dynamic_content']);
@@ -35,6 +36,12 @@ export class PreconnectComponent implements OnInit {
 
   ngOnInit(): void {
     this.time_choice = Math.random() >= 0.5;
+    var survey_data: any = {};
+    survey_data['user_id'] = this.user_id;
+    survey_data['time_choice'] = this.time_choice;
+    this.preconnectService.postUserTestType(survey_data).subscribe({
+      next: data =>{}
+    }); 
   }
 
 }

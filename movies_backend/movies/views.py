@@ -63,13 +63,23 @@ def postSurveyData(data):
                 rec_race = fname.race,
                 rec_gender = fname.gender,
             )
-            user = User.objects.get(user_id=data["user_id"])
-            user.test_type = timed
-            user.save()
         return JsonResponse('Post Info Success',safe=False)
     except Exception as e:
         print(e)
         return JsonResponse('Post Info Failed',safe=False)
+
+@api_view(["POST"])
+def postUserTestType(data):
+    try:
+        data = json.loads(data.body.decode("utf-8"))
+        timed = 1 if data["time_choice"] == True else 0
+        user = User.objects.get(user_id=data["user_id"])
+        user.test_type = timed
+        user.save()
+        return JsonResponse('Post Test Type Success',safe=False)
+    except Exception as e:
+        print(e)
+        return JsonResponse('Post Test Type Failed',safe=False)
 
 @api_view(["POST"])
 def postFeedbackData(data):
@@ -179,14 +189,18 @@ def createUserMovieNamePattern(id):
 
 @api_view(["POST"])
 def getNames(data):
-    user_id = str(data.body.decode("utf-8").strip())
-    index = model_to_dict(UserPattern.objects.get(user_id=user_id))['names_index']  
-    namesList = ast.literal_eval(model_to_dict(UserPattern.objects.get(user_id=user_id))['user_names_pattern'])
-    res = []
-    for i in range(index,index+3):
-        res.append(namesList[i])
-    UserPattern.objects.filter(user_id=user_id).update(names_index = index+3)
-    return JsonResponse(res,safe=False)
+    try:
+        user_id = str(data.body.decode("utf-8").strip())
+        index = model_to_dict(UserPattern.objects.get(user_id=user_id))['names_index']  
+        namesList = ast.literal_eval(model_to_dict(UserPattern.objects.get(user_id=user_id))['user_names_pattern'])
+        res = []
+        for i in range(index,index+3):
+            res.append(namesList[i])
+        UserPattern.objects.filter(user_id=user_id).update(names_index = index+3)
+        return JsonResponse(res,safe=False)
+    except Exception as e:
+        print(e)
+        return JsonResponse([],safe=False)
 
 @api_view(["POST"])
 def getMovies(data):
