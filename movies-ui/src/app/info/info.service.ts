@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { tap } from 'rxjs/internal/operators/tap';
 import { throwError, Observable } from 'rxjs';
+import {GlobalConstants} from '../global-constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class InfoService {
 
-  // base_url: string = 'http://localhost:8000/'
-  base_url: string = 'http://34.239.255.245/'
+  base_url: string = GlobalConstants.backend_url;
   constructor(private http: HttpClient) { }
   postInfo(data: any): Observable<any> {
     let url = this.base_url +'postuserinfo/';

@@ -4,7 +4,7 @@ from django.http.response import JsonResponse
 from django.forms.models import model_to_dict
 from rest_framework.decorators import api_view
 
-from movies.models import Dynamic, Fname, Lname, Movie, Output, User
+from movies.models import Dynamic, Fname, Lname, Movie, Output, User, UserPattern
 import dateutil.parser 
 import json
 import ast
@@ -118,27 +118,91 @@ def postUserInfo(data):
             user_genre = info["genre"],
             user_entry_time = info["user_entry_time"],
         )
+        createUserMovieNamePattern(info["user_id"])
         return JsonResponse('Post Info Success',safe=False)
     except Exception as e:
         print(e)
         return JsonResponse('Post Info Failed',safe=False)
 
+movies_count = len(Movie.objects.all())
+fnames_count = len(Fname.objects.all())
+whiteNames = []
+hispanicNames = []
+blackNames = []
+asianNames = []
+for fname in Fname.objects.all():
+    first_name = model_to_dict(fname)['first_name']
+    race = model_to_dict(fname)['race']
+    lnames = list(Lname.objects.filter(race=race))
+    for lname in lnames:
+        last_name = model_to_dict(lname)['last_name']
+        if race == 'White':
+            whiteNames.append({"fname":first_name,"lname":last_name})
+        elif race == 'Black':
+            blackNames.append({"fname":first_name,"lname":last_name})
+        elif race == 'Hispanic':
+            hispanicNames.append({"fname":first_name,"lname":last_name})
+        else:
+            asianNames.append({"fname":first_name,"lname":last_name})
+random.shuffle(whiteNames)
+random.shuffle(hispanicNames)
+random.shuffle(blackNames)
+random.shuffle(asianNames)
+
+def createUserMovieNamePattern(id):
+    try:
+        randomMovieslist = random.sample(range(movies_count), movies_count)
+        raceProbabilities = {'White':60,'Hispanic':20,'Black':13,'Asian':7}
+        namesList = []
+        random.shuffle(whiteNames)
+        random.shuffle(hispanicNames)
+        random.shuffle(blackNames)
+        random.shuffle(asianNames)
+        for i in range(int(movies_count*raceProbabilities['White']/100)+1):
+            namesList.append(whiteNames[i])
+        for i in range(int(movies_count*raceProbabilities['Hispanic']/100)+1):
+            namesList.append(hispanicNames[i])
+        for i in range(int(movies_count*raceProbabilities['Black']/100)+1):
+            namesList.append(blackNames[i])
+        for i in range(int(movies_count*raceProbabilities['Asian']/100)+1):
+            namesList.append(asianNames[i])
+        random.shuffle(namesList)
+        user_instance = UserPattern.objects.create(
+            user_id = id,
+            user_movies_pattern = str(randomMovieslist),
+            user_names_pattern = str(namesList),
+            movie_index = 0,
+            names_index = 0,
+        )
+    except Exception as e:
+        print(e)
+
 @api_view(["POST"])
 def getNames(data):
-    names = ast.literal_eval(data.body.decode("utf-8"))
-    fnames = [model_to_dict(Fname.objects.get(id=fname_id)) for fname_id in names]
+    user_id = str(data.body.decode("utf-8").strip())
+    index = model_to_dict(UserPattern.objects.get(user_id=user_id))['names_index']  
+    namesList = ast.literal_eval(model_to_dict(UserPattern.objects.get(user_id=user_id))['user_names_pattern'])
     res = []
-    for fname in fnames:
-        items = list(Lname.objects.filter(race=fname['race']))
-        random_lname = model_to_dict(random.sample(items, 1)[0])
-        res.append({'fname': fname['first_name'],'lname': random_lname['last_name']})
+    for i in range(index,index+3):
+        res.append(namesList[i])
+    UserPattern.objects.filter(user_id=user_id).update(names_index = index+3)
     return JsonResponse(res,safe=False)
 
 @api_view(["POST"])
 def getMovies(data):
-    movies_indexes = ast.literal_eval(data.body.decode("utf-8"))
-    movies = [model_to_dict(Movie.objects.get(id=movie_id)) for movie_id in movies_indexes]
-    return JsonResponse(movies,safe=False)
+    try:
+        user_id = str(data.body.decode("utf-8").strip())
+        index = model_to_dict(UserPattern.objects.get(user_id=user_id))['movie_index']  
+        moviesList = ast.literal_eval(model_to_dict(UserPattern.objects.get(user_id=user_id))['user_movies_pattern'])
+        movies_indexes = []
+        for i in range(index,index+3):
+            movies_indexes.append(moviesList[i])
+        UserPattern.objects.filter(user_id=user_id).update(movie_index = index+3)
+        movies = [model_to_dict(Movie.objects.get(id=movie_id)) for movie_id in movies_indexes]
+        return JsonResponse(movies,safe=False)
+    except Exception as e:
+        print(e)
+        return JsonResponse([],safe=False)
 
 @api_view(["GET"])
 def getDynamics(request):

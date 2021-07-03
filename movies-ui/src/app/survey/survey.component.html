@@ -1,16 +1,21 @@
-<div *ngIf="!names">
+<div *ngIf="!movies">
     <div nz-row nzJustify="center" nzAlign="middle">
         <div nz-col nzSpan="2" style="padding-top: 15%">
             <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
         </div>
     </div>
+    <div nz-row nzJustify="center" nzAlign="middle">
+        <div nz-col nzSpan="4" style="padding-top: 1%">
+            <i><h2>Loading Movies</h2></i>
+        </div>
+    </div>
 </div>
 
-<div *ngIf="names">
+<div *ngIf="movies">
     <nz-layout class="layout">
         <div class="sider">
             <nz-sider>
-                <div nz-row nzJustify="center" class="countdown" *ngIf="time_choice">
+                <div nz-row nzJustify="center" class="countdown" *ngIf="time_choice && deadline">
                     <nz-countdown 
                     [nzValue]="deadline" 
                     [nzTitle]="'Timer 1'"
@@ -19,7 +24,7 @@
                     (nzCountdownFinish)="timeup()"
                     ></nz-countdown>
                 </div>
-                <div nz-row nzJustify="center" class="countdown" *ngIf="!time_choice">
+                <div nz-row nzJustify="center" class="countdown" *ngIf="!time_choice && deadline">
                     <nz-countdown 
                     [nzValue]="deadline" 
                     [nzTitle]="'Timer 2'"

@@ -33,7 +33,7 @@ export class InfoComponent implements OnInit {
       this.validateForm.controls[i].updateValueAndValidity();
     }
     if(this.validateForm.valid){
-      if (this.validateForm.value['internet'] == '0'){
+      if (this.validateForm.value['internet'] != '4'){
         this.router.navigate(['/exit']);
       }
       else{

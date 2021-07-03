@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { tap } from 'rxjs/internal/operators/tap';
 import { throwError, Observable } from 'rxjs';
+import {GlobalConstants} from '../global-constants';
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +10,7 @@ import { throwError, Observable } from 'rxjs';
 export class SurveyService {
 
   constructor(private http: HttpClient) { }
-  // base_url: string = 'http://localhost:8000/'
-  base_url: string = 'http://34.239.255.245/'
+  base_url: string = GlobalConstants.backend_url;
 
   postSurveyData(data: any): Observable<any> {
     let url = this.base_url +'postsurvey/';
@@ -19,6 +19,11 @@ export class SurveyService {
       tap(response => {}));
   }
 
+  getDynamics(): Observable<any> {
+    let url = this.base_url +'getdynamics/';
+    return this.http.get<any[]>(url).pipe(
+      tap(response => {}));
+  }
   getMoviesCount(): Observable<any> {
     let url = this.base_url +'getmoviescount/';
     return this.http.get<any[]>(url).pipe(
@@ -29,13 +34,13 @@ export class SurveyService {
     return this.http.get<any[]>(url).pipe(
       tap(response => {}));
   }
-  getMovies(initial_movies: any[]): Observable<any> {
+  getMovies(initial_movies: any): Observable<any> {
     let url = this.base_url +'getmovies/';
     const headers = { 'Content-Type': 'text/plain' };
     return this.http.post<any[]>(url, initial_movies , {headers}).pipe(
       tap(data => {}));
   }
-  getNames(names: any[]): Observable<any> {
+  getNames(names: any): Observable<any> {
     let url = this.base_url +'getnames/';
     const headers = { 'Content-Type': 'text/plain' };
     return this.http.post<any[]>(url, names , {headers}).pipe(

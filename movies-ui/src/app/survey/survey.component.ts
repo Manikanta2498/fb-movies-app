@@ -11,13 +11,14 @@ import {SurveyService} from './survey.service';
 })
 export class SurveyComponent implements OnInit {
 
-  deadline = Date.now() + 1000 * 60 * 3;
+  deadline: any; 
+  target_movie_count: number;         //Number of movies user is required to select
   load_button_text: string = 'Load More';
   isLoading: boolean = false;
   time_choice: boolean = true;        //Show milliseconds if true
   movies: any[];                      //Movies fetched from Backend
   titles: any[] = [];                 //Titles of movies fetched
-  names: any[] = [];                  //Names fetched from Backend
+  names: any[];                  //Names fetched from Backend
   size: NzButtonSize = 'large';       //Submit button size
   isVisible: boolean = false;         //Review modal flag
   review_index: number;               //Which movie review is clicked
@@ -45,9 +46,9 @@ export class SurveyComponent implements OnInit {
     this.review_heading = this.names[this.review_index]['fname']+' '+this.names[this.review_index]['lname']+"'s review of "+this.movies[this.review_index]['title'];
   }
   add(i): void {
-    if (this.movies_count == 2){
+    if (this.movies_count == this.target_movie_count){
       const modal = this.modalService.warning({
-        nzTitle: 'You have already selected 2 movies, remove a selection or Submit',
+        nzTitle: 'You have already selected '+this.target_movie_count+' movies, remove a selection or Submit',
         nzContent: ''
       });
     }
@@ -116,14 +117,14 @@ export class SurveyComponent implements OnInit {
       this.titles.push(this.movies[movie]['title']);
     }
     var ind = this.movies_index;
-    this.surveyService.getMovies([this.movies_order[ind],this.movies_order[ind+1],this.movies_order[ind+2]]).subscribe({
+    this.surveyService.getMovies(this.user_id).subscribe({
       next: data =>{
-       for(var i=0;i<3;i++){
-        this.movies.push(data[i]);
-       }
+        for(var i=0;i<3;i++){
+          this.movies.push(data[i]);
+         }
       }
     }); 
-    this.surveyService.getNames([this.movies_order[ind],this.movies_order[ind+1],this.movies_order[ind+2]]).subscribe({
+    this.surveyService.getNames(this.user_id).subscribe({
       next: data =>{
        for(var i=0;i<3;i++){
         this.names.push(data[i]);
@@ -137,9 +138,9 @@ export class SurveyComponent implements OnInit {
   }
   submit() {
     console.log(this.movies_selected);
-    if (this.movies_count < 2){
+    if (this.movies_count < this.target_movie_count){
       const modal = this.modalService.warning({
-        nzTitle: 'You have not selected 2 movies, please select atleast 2 movies to Submit',
+        nzTitle: 'You have not selected '+this.target_movie_count+' movies, please select atleast '+this.target_movie_count+' movies to Submit',
         nzContent: ''
       });
     }
@@ -175,37 +176,23 @@ export class SurveyComponent implements OnInit {
     }
   }
   ngOnInit(): void {
-    this.surveyService.getMoviesCount().subscribe({
+    this.surveyService.getDynamics().subscribe({
       next: data =>{
-        this.total_movies = data;
-        while(this.movies_order.length < this.total_movies){
-          var r = Math.floor(Math.random() * this.total_movies) + 1;
-          if(this.movies_order.indexOf(r) === -1) this.movies_order.push(r);
-        }
-        var ind = this.movies_index;
-        this.surveyService.getMovies([this.movies_order[ind],this.movies_order[ind+1],this.movies_order[ind+2]]).subscribe({
-          next: data =>{
-          this.movies = data;
-          }
-        }); 
-        this.movies_index += 3;
+        this.deadline = Date.now() + 1000 * 60 * data['survey_time'];
+        this.target_movie_count = data['movies_select_count'];
       }
     }); 
-    this.surveyService.getFnamescount().subscribe({
+    this.surveyService.getMovies(this.user_id).subscribe({
       next: data =>{
-        this.total_names = data;
-        while(this.names_order.length < this.total_names){
-          var r = Math.floor(Math.random() * this.total_names) + 1;
-          if(this.names_order.indexOf(r) === -1) this.names_order.push(r);
-        }
-        var ind = this.names_index;
-        this.surveyService.getNames([this.names_order[ind],this.names_order[ind+1],this.names_order[ind+2]]).subscribe({
-          next: data =>{
-          this.names = data;
-          }
-        }); 
-        this.names_index += 3;
+        this.movies = data;
       }
     }); 
+    this.movies_index += 3;
+    this.surveyService.getNames(this.user_id).subscribe({
+      next: data =>{
+        this.names = data;
+      }
+    }); 
+    this.names_index += 3;
   }
 }

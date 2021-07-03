@@ -24,9 +24,9 @@ export class ThanksComponent implements OnInit {
         this.movie_flag = true;
         this.final_movie = movie_links[0];
       }
-      else if (movie_links.length == 2) {
+      else if (movie_links.length >= 2) {
         this.movie_flag = true;
-        var rand = Math.floor(Math.random() * 2);
+        var rand = Math.floor(Math.random() * movie_links.length);
         this.final_movie = movie_links[rand];
       }
     });

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
 # Register your models here.
-from .models import Lname,Fname,Dynamic,Movie,User,Output
+from .models import Lname,Fname,Dynamic,Movie,User,Output,UserPattern
 
 myModels = [Dynamic]
 admin.site.register(myModels)
@@ -29,3 +29,9 @@ class UserAdmin(ImportExportModelAdmin,admin.ModelAdmin):
     def has_add_permission(self, request, obj=None):
         return False
 admin.site.register(User, UserAdmin)
+
+class UserPatternAdmin(ImportExportModelAdmin,admin.ModelAdmin):
+    list_display = ('user_id','user_names_pattern')
+    def has_add_permission(self, request, obj=None):
+        return False
+admin.site.register(UserPattern, UserPatternAdmin)

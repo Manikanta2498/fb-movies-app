@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { tap } from 'rxjs/internal/operators/tap';
 import { throwError, Observable } from 'rxjs';
+import {GlobalConstants} from '../global-constants';
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +10,7 @@ import { throwError, Observable } from 'rxjs';
 export class ThanksService {
 
   constructor(private http: HttpClient) { }
-  // base_url: string = 'http://localhost:8000/'
-  base_url: string = 'http://34.239.255.245/'
+  base_url: string = GlobalConstants.backend_url;
   getDynamics(): Observable<any> {
     let url = this.base_url +'getdynamics/';
     return this.http.get<any[]>(url).pipe(
