@@ -178,7 +178,12 @@ export class SurveyComponent implements OnInit {
   ngOnInit(): void {
     this.surveyService.getDynamics().subscribe({
       next: data =>{
-        this.deadline = Date.now() + 1000 * 60 * data['survey_time'];
+        if(this.time_choice) {
+          this.deadline = Date.now() + 1000 * 60 * data['survey_time'];
+        }
+        else{
+          this.deadline = Date.now() + 1000 * 60 * data['survey_time_2'];
+        }
         this.target_movie_count = data['movies_select_count'];
       }
     }); 

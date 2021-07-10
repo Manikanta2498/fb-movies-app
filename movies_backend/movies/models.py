@@ -7,6 +7,7 @@ class Dynamic(models.Model):
     preconnect2 = models.TextField()
     thankyou_code = models.CharField(max_length=20)
     survey_time = models.IntegerField(null=True)
+    survey_time_2 = models.IntegerField(null=True)
     movies_select_count = models.IntegerField(null=True)
 
 class Movie(models.Model):
