@@ -24,6 +24,10 @@ export class SurveyService {
     return this.http.get<any[]>(url).pipe(
       tap(response => {}));
   }
+  getImage(img_index: string): Promise<Blob> {
+    let url = this.base_url +"getimage/"+img_index+'/';
+    return this.http.get(url, { responseType: 'blob' }).toPromise();
+  }
   getMoviesCount(): Observable<any> {
     let url = this.base_url +'getmoviescount/';
     return this.http.get<any[]>(url).pipe(

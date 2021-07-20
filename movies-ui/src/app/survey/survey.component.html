@@ -1,4 +1,4 @@
-<div *ngIf="!movies">
+<div *ngIf="!img_fetched">
     <div nz-row nzJustify="center" nzAlign="middle">
         <div nz-col nzSpan="2" style="padding-top: 15%">
             <nz-spin nzSimple [nzSize]="'large'"></nz-spin>
@@ -11,7 +11,7 @@
     </div>
 </div>
 
-<div *ngIf="movies">
+<div *ngIf="img_fetched">
     <nz-layout class="layout">
         <div class="sider">
             <nz-sider>
@@ -47,10 +47,16 @@
                         <div nz-col nzSpan="8" *ngFor="let movie of movies; let i=index;">
                             <nz-card>
                                 <div nz-row nzJustify="center">
-                                    <h3>{{names[i]['fname']}} {{names[i]['lname']}} gave this film {{movie['rating']}}/10</h3>
+                                    <img [src] = "images[i]"
+                                        height="50" 
+                                        id="b">
+                                    <h3 style="margin-left: 10px;margin-top:10px;">{{names[i]['fname']}} {{names[i]['lname']}} <i>recommends</i></h3>
                                 </div><br/>
-                                <div nz-row nzJustify="center">
+                                <!--<div nz-row nzJustify="center">
                                     <img src="{{movie['image_url']}}" alt="Smiley face" height="300" width="200">
+                                </div>-->
+                                <div nz-row nzJustify="center" style="height:50px;">
+                                    <strong><h3 style="font-family: Helvetica, sans-serif;"><b>{{movie['title']}}</b></h3></strong>
                                 </div>
                                 <div nz-row nzJustify="center" style="padding-top:10px;">
                                     <button nz-button nzType="default" class="review" (click)="review(i)">Read {{names[i]['fname']}} {{names[i]['lname']}}'s review</button>

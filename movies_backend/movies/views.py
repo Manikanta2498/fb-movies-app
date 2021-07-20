@@ -10,6 +10,8 @@ import json
 import ast
 import random
 import string
+from os import listdir
+from os.path import isfile, join
 
 IPs = []
 
@@ -31,6 +33,13 @@ def getUserID(request):
         while (len(User.objects.filter(user_id=r)) != 0):
             r = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(10)])
     return JsonResponse(r,safe=False)
+
+images_path = "race/"
+onlyfiles = [f for f in listdir(images_path) if isfile(join(images_path, f))]
+@api_view(["GET"])
+def getImage(request, index):
+    image_data = open(images_path+str(onlyfiles[int(index)]), "rb").read()
+    return HttpResponse(image_data, content_type="image/jpeg")
 
 @api_view(["POST"])
 def postSurveyData(data):

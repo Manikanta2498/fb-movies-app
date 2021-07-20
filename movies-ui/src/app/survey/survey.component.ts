@@ -1,4 +1,5 @@
 import { Component, NgZone, OnInit } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationExtras, Params, Router } from '@angular/router';
 import { NzButtonSize } from 'ng-zorro-antd/button';
 import { NzModalService } from 'ng-zorro-antd/modal';
@@ -32,7 +33,10 @@ export class SurveyComponent implements OnInit {
   names_index: number = 0;           //From which index to fetch next 3 names
   total_names: number = 0;           //Total first names available in Database
   movies_reviewed: any = {};         //Number of times a movie review is read
-  user_id: string;
+  user_id: string = 'GycbKFkO3p';
+  images: any[] = [];                 //Images of faces fetched from Backend
+  temp_img: any;
+  img_fetched: boolean = false;
 
   review(i): void {
     if (this.movies_reviewed[i] != null) {
@@ -70,16 +74,17 @@ export class SurveyComponent implements OnInit {
               private route: ActivatedRoute,
               private modalService: NzModalService,
               private surveyService: SurveyService,
+              private sanitizer: DomSanitizer,
               private zone: NgZone) { 
-    this.route.queryParams.subscribe(params => {
-      this.user_id = params['user_id'];
-      if (params['time_choice'] == "true"){
-        this.time_choice = true;
-      }
-      else{ 
-        this.time_choice = false;
-      }
-    });
+    // this.route.queryParams.subscribe(params => {
+    //   this.user_id = params['user_id'];
+    //   if (params['time_choice'] == "true"){
+    //     this.time_choice = true;
+    //   }
+    //   else{ 
+    //     this.time_choice = false;
+    //   }
+    // });
   }
 
   timeup() {
@@ -175,6 +180,19 @@ export class SurveyComponent implements OnInit {
       this.router.navigate(['/feedback'],navigationExtras);
     }
   }
+  fetchImg(data) {
+    const mediaType = 'application/image';
+    const blob = new Blob([data], { type: mediaType });
+    const unsafeImg = URL.createObjectURL(blob);
+    return this.sanitizer.bypassSecurityTrustUrl(unsafeImg)
+  }
+  async fetchAll (){
+    for(var i = 0; i <10; i++){
+      var data = await this.surveyService.getImage(i.toString());
+      this.images[i] = this.fetchImg(data);
+    }
+    this.img_fetched = true;
+  }
   ngOnInit(): void {
     this.surveyService.getDynamics().subscribe({
       next: data =>{
@@ -199,5 +217,6 @@ export class SurveyComponent implements OnInit {
       }
     }); 
     this.names_index += 3;
+    this.fetchAll();
   }
 }
