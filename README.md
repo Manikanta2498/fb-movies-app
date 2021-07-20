@@ -1,4 +1,5 @@
 # fb-movies-app
+Survey platform to study and analyze in-group algorithmic bias in social networking platforms
 
 ### Frameworks used:
 
