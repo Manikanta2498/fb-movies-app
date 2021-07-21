@@ -19,7 +19,8 @@ export class SurveyComponent implements OnInit {
   time_choice: boolean = true;        //Show milliseconds if true
   movies: any[];                      //Movies fetched from Backend
   titles: any[] = [];                 //Titles of movies fetched
-  names: any[];                  //Names fetched from Backend
+  names: any[];                       //Names fetched from Backend
+  faces: any[];                       //Faces fetched from Backend
   size: NzButtonSize = 'large';       //Submit button size
   isVisible: boolean = false;         //Review modal flag
   review_index: number;               //Which movie review is clicked
@@ -31,9 +32,10 @@ export class SurveyComponent implements OnInit {
   total_movies: number = 0;           //Total movies available in Database
   names_order: any[] = [];           //Order in which names are fetched
   names_index: number = 0;           //From which index to fetch next 3 names
+  faces_index: number = 0;           //From which index to fetch next 3 faces
   total_names: number = 0;           //Total first names available in Database
   movies_reviewed: any = {};         //Number of times a movie review is read
-  user_id: string = 'GycbKFkO3p';
+  user_id: string = 'LL9T9KROMP';
   images: any[] = [];                 //Images of faces fetched from Backend
   temp_img: any;
   img_fetched: boolean = false;
@@ -118,6 +120,7 @@ export class SurveyComponent implements OnInit {
   loadMore(){
     this.load_button_text = 'Loading'
     this.isLoading = true;
+    // this.img_fetched = false;
     for (var movie in this.movies){
       this.titles.push(this.movies[movie]['title']);
     }
@@ -134,10 +137,18 @@ export class SurveyComponent implements OnInit {
        for(var i=0;i<3;i++){
         this.names.push(data[i]);
        }
+       this.surveyService.getFaces(this.user_id).subscribe({
+        next: data =>{
+          for(var i=0;i<3;i++){
+            this.faces.push(data[i]);
+          }
+          this.fetchAll(this.names_index);
+          this.names_index += 3;
+          }
+        }); 
       }
     }); 
     this.movies_index += 3;
-    this.names_index += 3;
     this.isLoading = false;
     this.load_button_text = 'Load More';
   }
@@ -186,9 +197,11 @@ export class SurveyComponent implements OnInit {
     const unsafeImg = URL.createObjectURL(blob);
     return this.sanitizer.bypassSecurityTrustUrl(unsafeImg)
   }
-  async fetchAll (){
-    for(var i = 0; i <10; i++){
-      var data = await this.surveyService.getImage(i.toString());
+  async fetchAll (ind){
+    console.log(ind);
+    for(var i = ind; i <ind+3; i++){
+      var j = this.faces[i];
+      var data = await this.surveyService.getImage(this.names[i]['fname']+','+j.toString());
       this.images[i] = this.fetchImg(data);
     }
     this.img_fetched = true;
@@ -208,15 +221,20 @@ export class SurveyComponent implements OnInit {
     this.surveyService.getMovies(this.user_id).subscribe({
       next: data =>{
         this.movies = data;
+        this.movies_index += 3;
       }
     }); 
-    this.movies_index += 3;
     this.surveyService.getNames(this.user_id).subscribe({
       next: data =>{
         this.names = data;
+        this.names_index += 3;
+        this.surveyService.getFaces(this.user_id).subscribe({
+          next: data =>{
+            this.faces = data;
+            this.fetchAll(0);
+          }
+        }); 
       }
     }); 
-    this.names_index += 3;
-    this.fetchAll();
   }
 }

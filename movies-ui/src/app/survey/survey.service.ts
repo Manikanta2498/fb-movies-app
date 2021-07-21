@@ -38,16 +38,22 @@ export class SurveyService {
     return this.http.get<any[]>(url).pipe(
       tap(response => {}));
   }
-  getMovies(initial_movies: any): Observable<any> {
+  getMovies(user_id: any): Observable<any> {
     let url = this.base_url +'getmovies/';
     const headers = { 'Content-Type': 'text/plain' };
-    return this.http.post<any[]>(url, initial_movies , {headers}).pipe(
+    return this.http.post<any[]>(url, user_id , {headers}).pipe(
       tap(data => {}));
   }
-  getNames(names: any): Observable<any> {
+  getNames(user_id: any): Observable<any> {
     let url = this.base_url +'getnames/';
     const headers = { 'Content-Type': 'text/plain' };
-    return this.http.post<any[]>(url, names , {headers}).pipe(
+    return this.http.post<any[]>(url, user_id , {headers}).pipe(
+      tap(data => {}));
+  }
+  getFaces(user_id: any): Observable<any> {
+    let url = this.base_url +'getfaces/';
+    const headers = { 'Content-Type': 'text/plain' };
+    return this.http.post<any[]>(url, user_id , {headers}).pipe(
       tap(data => {}));
   }
 }

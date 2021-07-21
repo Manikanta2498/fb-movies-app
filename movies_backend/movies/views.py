@@ -6,14 +6,12 @@ from rest_framework.decorators import api_view
 
 from movies.models import Dynamic, Fname, Lname, Movie, Output, User, UserPattern
 import dateutil.parser 
-import json
-import ast
-import random
-import string
+import json,ast,random,string,re
 from os import listdir
 from os.path import isfile, join
 
 IPs = []
+images_path = "race/"
 
 def index(request):
     return HttpResponse("Hello, world. You're at the Movies index.")
@@ -33,13 +31,6 @@ def getUserID(request):
         while (len(User.objects.filter(user_id=r)) != 0):
             r = ''.join([random.choice(string.ascii_letters + string.digits) for n in range(10)])
     return JsonResponse(r,safe=False)
-
-images_path = "race/"
-onlyfiles = [f for f in listdir(images_path) if isfile(join(images_path, f))]
-@api_view(["GET"])
-def getImage(request, index):
-    image_data = open(images_path+str(onlyfiles[int(index)]), "rb").read()
-    return HttpResponse(image_data, content_type="image/jpeg")
 
 @api_view(["POST"])
 def postSurveyData(data):
@@ -142,7 +133,7 @@ def postUserInfo(data):
     except Exception as e:
         print(e)
         return JsonResponse('Post Info Failed',safe=False)
-
+    
 movies_count = len(Movie.objects.all())
 fnames_count = len(Fname.objects.all())
 whiteNames = []
@@ -156,17 +147,26 @@ for fname in Fname.objects.all():
     for lname in lnames:
         last_name = model_to_dict(lname)['last_name']
         if race == 'White':
-            whiteNames.append({"fname":first_name,"lname":last_name})
+            whiteNames.append({"fname":first_name,"lname":last_name,"race":'white'})
         elif race == 'Black':
-            blackNames.append({"fname":first_name,"lname":last_name})
+            blackNames.append({"fname":first_name,"lname":last_name,"race":'black'})
         elif race == 'Hispanic':
-            hispanicNames.append({"fname":first_name,"lname":last_name})
+            hispanicNames.append({"fname":first_name,"lname":last_name,"race":'hispanic'})
         else:
-            asianNames.append({"fname":first_name,"lname":last_name})
+            asianNames.append({"fname":first_name,"lname":last_name,"race":'asian'})
 random.shuffle(whiteNames)
 random.shuffle(hispanicNames)
 random.shuffle(blackNames)
 random.shuffle(asianNames)
+
+onlyfiles = [f for f in listdir(images_path) if isfile(join(images_path, f))]
+image_sets = []
+pattern = '_#\d*_'
+exclude_files = [8,41,37,79,80,95,98,111,104,125,140,153,144,143,154,163,177,194,221,256,271,280,287,288,300,313,314,315,320,321,333,350]
+for f in onlyfiles:
+    img = int(re.findall(pattern, f)[0][2:-1])
+    if img not in image_sets and img not in exclude_files:
+        image_sets.append(int(img))
 
 def createUserMovieNamePattern(id):
     try:
@@ -186,15 +186,47 @@ def createUserMovieNamePattern(id):
         for i in range(int(movies_count*raceProbabilities['Asian']/100)+1):
             namesList.append(asianNames[i])
         random.shuffle(namesList)
+        random.shuffle(image_sets)
         user_instance = UserPattern.objects.create(
             user_id = id,
             user_movies_pattern = str(randomMovieslist),
             user_names_pattern = str(namesList),
+            user_faces_pattern = str(image_sets),
             movie_index = 0,
             names_index = 0,
         )
     except Exception as e:
         print(e)
+
+@api_view(["GET"])
+def getImage(request, data):
+    first_name,index = data.split(',')
+    fname = Fname.objects.filter(first_name=first_name)[0]
+    race = fname.race.lower()
+    setFaces = []
+    for f in onlyfiles:
+        pattern = '_#'+str(index)+'_'
+        if pattern in f:
+            if race in f:
+                setFaces.append(f)
+                continue
+    img = str(random.choice(setFaces))
+    image_data = open(images_path+img, "rb").read()
+    return HttpResponse(image_data, content_type="image/jpeg")
+
+@api_view(["POST"])
+def getFaces(data):
+    try:
+        user_id = str(data.body.decode("utf-8").strip())
+        index = model_to_dict(UserPattern.objects.get(user_id=user_id))['names_index']  
+        facesList = ast.literal_eval(model_to_dict(UserPattern.objects.get(user_id=user_id))['user_faces_pattern'])
+        res = []
+        for i in range(index,index+3):
+            res.append(facesList[i])
+        return JsonResponse(res,safe=False)
+    except Exception as e:
+        print(e)
+        return JsonResponse([],safe=False)
 
 @api_view(["POST"])
 def getNames(data):

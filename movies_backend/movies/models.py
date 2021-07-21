@@ -65,6 +65,8 @@ class UserPattern(models.Model):
     user_id = models.CharField(max_length=10)
     user_movies_pattern = models.CharField(max_length=5000)
     user_names_pattern = models.CharField(max_length=5000)  
+    user_faces_pattern = models.CharField(max_length=5000)
     movie_index = models.IntegerField()  
     names_index = models.IntegerField()
+
 
