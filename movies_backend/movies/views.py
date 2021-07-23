@@ -9,9 +9,12 @@ import dateutil.parser
 import json,ast,random,string,re
 from os import listdir
 from os.path import isfile, join
+import pandas as pd 
+import time
 
 IPs = []
-images_path = "race/"
+images_path = "M:/MS_STUDY/RA/MOVIE/race/"
+df = pd.read_csv('faces.csv',usecols=['face_number','type'])
 
 def index(request):
     return HttpResponse("Hello, world. You're at the Movies index.")
@@ -143,30 +146,45 @@ asianNames = []
 for fname in Fname.objects.all():
     first_name = model_to_dict(fname)['first_name']
     race = model_to_dict(fname)['race']
+    gender = model_to_dict(fname)['gender']
     lnames = list(Lname.objects.filter(race=race))
     for lname in lnames:
         last_name = model_to_dict(lname)['last_name']
         if race == 'White':
-            whiteNames.append({"fname":first_name,"lname":last_name,"race":'white'})
+            whiteNames.append({"fname":first_name,"lname":last_name,"race":'white',"gender":gender})
         elif race == 'Black':
-            blackNames.append({"fname":first_name,"lname":last_name,"race":'black'})
+            blackNames.append({"fname":first_name,"lname":last_name,"race":'black',"gender":gender})
         elif race == 'Hispanic':
-            hispanicNames.append({"fname":first_name,"lname":last_name,"race":'hispanic'})
+            hispanicNames.append({"fname":first_name,"lname":last_name,"race":'hispanic',"gender":gender})
         else:
-            asianNames.append({"fname":first_name,"lname":last_name,"race":'asian'})
+            asianNames.append({"fname":first_name,"lname":last_name,"race":'asian',"gender":gender})
 random.shuffle(whiteNames)
 random.shuffle(hispanicNames)
 random.shuffle(blackNames)
 random.shuffle(asianNames)
 
 onlyfiles = [f for f in listdir(images_path) if isfile(join(images_path, f))]
-image_sets = []
 pattern = '_#\d*_'
 exclude_files = [8,41,37,79,80,95,98,111,104,125,140,153,144,143,154,163,177,194,221,256,271,280,287,288,300,313,314,315,320,321,333,350]
-for f in onlyfiles:
-    img = int(re.findall(pattern, f)[0][2:-1])
-    if img not in image_sets and img not in exclude_files:
-        image_sets.append(int(img))
+
+def createFacesPattern(namesList):
+    image_sets = []
+    for name in namesList:
+        if name['gender'] == 'Male':
+            for i in range(201):
+                face_type = df.iloc[[i]]['type'].values[0]
+                face_idx = df.iloc[[i]]['face_number'].values[0]
+                if (face_type == 'men') and (face_idx not in image_sets):
+                    image_sets.append(face_idx)
+                    break
+        elif name['gender'] == 'Female':
+            for i in range(201):
+                face_type = df.iloc[[i]]['type'].values[0]
+                face_idx = df.iloc[[i]]['face_number'].values[0]
+                if (face_type == 'women') and (face_idx not in image_sets):
+                    image_sets.append(face_idx)
+                    break
+    return image_sets
 
 def createUserMovieNamePattern(id):
     try:
@@ -186,7 +204,7 @@ def createUserMovieNamePattern(id):
         for i in range(int(movies_count*raceProbabilities['Asian']/100)+1):
             namesList.append(asianNames[i])
         random.shuffle(namesList)
-        random.shuffle(image_sets)
+        image_sets = createFacesPattern(namesList)
         user_instance = UserPattern.objects.create(
             user_id = id,
             user_movies_pattern = str(randomMovieslist),
@@ -195,21 +213,19 @@ def createUserMovieNamePattern(id):
             movie_index = 0,
             names_index = 0,
         )
+        print('User created')
     except Exception as e:
         print(e)
 
 @api_view(["GET"])
 def getImage(request, data):
     first_name,index = data.split(',')
-    fname = Fname.objects.filter(first_name=first_name)[0]
-    race = fname.race.lower()
     setFaces = []
+    pattern = '_#'+str(index)+'_'
     for f in onlyfiles:
-        pattern = '_#'+str(index)+'_'
         if pattern in f:
-            if race in f:
-                setFaces.append(f)
-                continue
+            setFaces.append(f)
+            continue
     img = str(random.choice(setFaces))
     image_data = open(images_path+img, "rb").read()
     return HttpResponse(image_data, content_type="image/jpeg")
@@ -218,11 +234,12 @@ def getImage(request, data):
 def getFaces(data):
     try:
         user_id = str(data.body.decode("utf-8").strip())
-        index = model_to_dict(UserPattern.objects.get(user_id=user_id))['names_index']  
+        index = model_to_dict(UserPattern.objects.get(user_id=user_id))['faces_index']  
         facesList = ast.literal_eval(model_to_dict(UserPattern.objects.get(user_id=user_id))['user_faces_pattern'])
         res = []
         for i in range(index,index+3):
             res.append(facesList[i])
+        UserPattern.objects.filter(user_id=user_id).update(faces_index = index+3)
         return JsonResponse(res,safe=False)
     except Exception as e:
         print(e)

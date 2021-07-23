@@ -6,9 +6,9 @@
             nzSubTitle=""
             >
             <div nz-result-extra>
-                <h2>Here is your completion code: '{{code}}' <i nz-icon nzType="copy" nzTheme="outline" (click)="copyText()"></i></h2>
-                <br>
                 <div *ngIf="movie_flag">
+                    <h2>Here is your completion code: '{{code}}' <i nz-icon nzType="copy" nzTheme="outline" (click)="copyText()"></i></h2>
+                    <br>
                     <a href={{final_movie}}
                         target="blank">
                         <button nz-button nzType="primary" (click)="movie()">Here is the link for your movie<i nz-icon nzType="play-square" nzTheme="outline"></i></button>

@@ -35,7 +35,7 @@ export class SurveyComponent implements OnInit {
   faces_index: number = 0;           //From which index to fetch next 3 faces
   total_names: number = 0;           //Total first names available in Database
   movies_reviewed: any = {};         //Number of times a movie review is read
-  user_id: string = 'LL9T9KROMP';
+  user_id: string;
   images: any[] = [];                 //Images of faces fetched from Backend
   temp_img: any;
   img_fetched: boolean = false;
@@ -78,15 +78,15 @@ export class SurveyComponent implements OnInit {
               private surveyService: SurveyService,
               private sanitizer: DomSanitizer,
               private zone: NgZone) { 
-    // this.route.queryParams.subscribe(params => {
-    //   this.user_id = params['user_id'];
-    //   if (params['time_choice'] == "true"){
-    //     this.time_choice = true;
-    //   }
-    //   else{ 
-    //     this.time_choice = false;
-    //   }
-    // });
+    this.route.queryParams.subscribe(params => {
+      this.user_id = params['user_id'];
+      if (params['time_choice'] == "true"){
+        this.time_choice = true;
+      }
+      else{ 
+        this.time_choice = false;
+      }
+    });
   }
 
   timeup() {
@@ -218,23 +218,29 @@ export class SurveyComponent implements OnInit {
         this.target_movie_count = data['movies_select_count'];
       }
     }); 
-    this.surveyService.getMovies(this.user_id).subscribe({
-      next: data =>{
-        this.movies = data;
-        this.movies_index += 3;
-      }
-    }); 
-    this.surveyService.getNames(this.user_id).subscribe({
-      next: data =>{
-        this.names = data;
-        this.names_index += 3;
-        this.surveyService.getFaces(this.user_id).subscribe({
+    setTimeout(() => 
+      {
+        this.surveyService.getMovies(this.user_id).subscribe({
           next: data =>{
-            this.faces = data;
-            this.fetchAll(0);
+            this.movies = data;
+            this.movies_index += 3;
+            console.log(this.movies)
           }
         }); 
-      }
-    }); 
+        this.surveyService.getNames(this.user_id).subscribe({
+          next: data =>{
+            this.names = data;
+            this.names_index += 3;
+            console.log(this.names)
+            this.surveyService.getFaces(this.user_id).subscribe({
+              next: data =>{
+                this.faces = data;
+                this.fetchAll(0);
+              }
+            }); 
+          }
+        }); 
+      },
+      5000);
   }
 }

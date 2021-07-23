@@ -68,5 +68,6 @@ class UserPattern(models.Model):
     user_faces_pattern = models.CharField(max_length=5000)
     movie_index = models.IntegerField()  
     names_index = models.IntegerField()
+    faces_index = models.IntegerField(default=0)
 
 
