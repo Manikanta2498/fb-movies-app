@@ -62,7 +62,7 @@
                                     <button nz-button nzType="default" class="review" (click)="review(i)">Read {{names[i]['fname']}} {{names[i]['lname']}}'s review</button>
                                 </div>
                                 <div nz-row nzJustify="center" style="padding-top:10px;">
-                                    <button nz-button nzType="primary" (click)="add(i)" *ngIf="!movies_selected[i]"><i nz-icon nzType="plus" nzTheme="outline"></i>Add {{names[i]['fname']}} {{names[i]['lname']}}'s suggestion to your list</button>
+                                    <button nz-button nzType="primary" (click)="add(i)" *ngIf="!movies_selected[i]"><i nz-icon nzType="plus" nzTheme="outline"></i>Add</button>
                                     <button nz-button nzType="primary" class="remove" (click)="remove(i)" *ngIf="movies_selected[i]"><i nz-icon nzType="close" nzTheme="outline"></i>Remove from your list</button>
                                 </div>
                             </nz-card>

@@ -220,12 +220,15 @@ def createUserMovieNamePattern(id):
 @api_view(["GET"])
 def getImage(request, data):
     first_name,index = data.split(',')
+    fname = Fname.objects.filter(first_name=first_name)[0]
+    race = fname.race
     setFaces = []
     pattern = '_#'+str(index)+'_'
     for f in onlyfiles:
         if pattern in f:
-            setFaces.append(f)
-            continue
+            if race in f:
+                setFaces.append(f)
+                continue
     img = str(random.choice(setFaces))
     image_data = open(images_path+img, "rb").read()
     return HttpResponse(image_data, content_type="image/jpeg")
