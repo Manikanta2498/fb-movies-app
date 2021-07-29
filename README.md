@@ -21,4 +21,6 @@ Survey platform to study and analyze in-group algorithmic bias in social network
 
 * Dynamics (Updatable content for specific pages)
 
+* UserPatterns
+
 ### Setup instructions can be found inside the UI/Backend folders
