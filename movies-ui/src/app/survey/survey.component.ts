@@ -36,6 +36,7 @@ export class SurveyComponent implements OnInit {
   total_names: number = 0;           //Total first names available in Database
   movies_reviewed: any = {};         //Number of times a movie review is read
   user_id: string;
+  temp_rating: number = 9;
   images: any[] = [];                 //Images of faces fetched from Backend
   temp_img: any;
   img_fetched: boolean = false;

@@ -16,6 +16,9 @@ class Movie(models.Model):
     link = models.CharField(max_length=100)
     rating = models.CharField(max_length=2)
     image_url = models.CharField(max_length=200)
+    length = models.CharField(max_length=100,default='')
+    genre = models.CharField(max_length=500,default='')
+    release_date = models.CharField(max_length=100,default='')
 
 class Fname(models.Model):
     first_name = models.CharField(max_length=200)

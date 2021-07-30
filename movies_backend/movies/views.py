@@ -188,6 +188,9 @@ def createFacesPattern(namesList):
 
 def createUserMovieNamePattern(id):
     try:
+        print("------------------------------------")
+        print(movies_count)
+        print("------------------------------------")
         randomMovieslist = random.sample(range(movies_count), movies_count)
         raceProbabilities = {'White':60,'Hispanic':20,'Black':13,'Asian':7}
         namesList = []
@@ -221,7 +224,7 @@ def createUserMovieNamePattern(id):
 def getImage(request, data):
     first_name,index = data.split(',')
     fname = Fname.objects.filter(first_name=first_name)[0]
-    race = fname.race
+    race = fname.race.lower()
     setFaces = []
     pattern = '_#'+str(index)+'_'
     for f in onlyfiles:
@@ -294,7 +297,7 @@ def getFNamesCount(request):
 @api_view(["GET"])
 def createFnames(request):
     try:
-        with open('../DB_Data/fname.json') as f:
+        with open('DB_Data/fname.json') as f:
             data = json.load(f)
             for fname in data[2]['data']:
                 fname_instance = Fname.objects.create(
@@ -309,7 +312,7 @@ def createFnames(request):
 @api_view(["GET"])
 def createLnames(request):
     try:
-        with open('../DB_Data/lname.json') as f:
+        with open('DB_Data/lname.json') as f:
             data = json.load(f)
             for lname in data[2]['data']:
                 fname_instance = Lname.objects.create(
@@ -323,7 +326,7 @@ def createLnames(request):
 @api_view(["GET"])      
 def createMovies(request):
     try:
-        with open('../DB_Data/movies_1.json') as f:
+        with open('DB_Data/movies_1.json') as f:
             data = json.load(f)
             for movie in data[2]['data']:
                 movie_instance = Movie.objects.create(
@@ -332,6 +335,9 @@ def createMovies(request):
                     link=movie['link'],
                     rating=movie['rating'],
                     image_url=movie['image_link'],
+                    length = movie['length'],
+                    genre = movie['genre'],
+                    release_date = movie['release_date'],
                     )
         return JsonResponse('Movies created!',safe=False)
     except ValueError as e:

@@ -55,8 +55,14 @@
                                 <!--<div nz-row nzJustify="center">
                                     <img src="{{movie['image_url']}}" alt="Smiley face" height="300" width="200">
                                 </div>-->
+                                <div nz-row nzJustify="center" style="height:40px;">
+                                    <nz-rate [ngModel]="movie['rating']/2" nzAllowHalf></nz-rate>
+                                </div>
                                 <div nz-row nzJustify="center" style="height:50px;">
                                     <strong><h3 style="font-family: Helvetica, sans-serif;"><b>{{movie['title']}}</b></h3></strong>
+                                </div>
+                                <div nz-row nzJustify="center" style="height:40px;">
+                                    <strong><h3 style="font-family: Helvetica, sans-serif;">{{movie['genre']}}</h3></strong>
                                 </div>
                                 <div nz-row nzJustify="center" style="padding-top:10px;">
                                     <button nz-button nzType="default" class="review" (click)="review(i)">Read {{names[i]['fname']}} {{names[i]['lname']}}'s review</button>
