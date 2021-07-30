@@ -3,9 +3,9 @@ Survey platform to study and analyze in-group algorithmic bias in social network
 
 ### Frameworks used:
 
-* Angular 10 for UI 
+* Angular for UI 
 
-* Django 3 for APIs
+* Django for APIs
 
 
 ### Database Tables: 
@@ -20,5 +20,7 @@ Survey platform to study and analyze in-group algorithmic bias in social network
 * Output (Output generated out of User Experience tracked with User ID)
 
 * Dynamics (Updatable content for specific pages)
+
+* UserPatterns
 
 ### Setup instructions can be found inside the UI/Backend folders
