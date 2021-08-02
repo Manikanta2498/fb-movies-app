@@ -13,8 +13,8 @@ import pandas as pd
 import time
 
 IPs = []
-images_path = "M:/MS_STUDY/RA/MOVIE/race/"
-df = pd.read_csv('faces.csv',usecols=['face_number','type'])
+images_path = "M:/MS_STUDY/RA/MOVIE/selected gan faces/"
+df = pd.read_csv('selected_faces.csv',usecols=['face_number','type'])
 
 def index(request):
     return HttpResponse("Hello, world. You're at the Movies index.")
@@ -171,14 +171,14 @@ def createFacesPattern(namesList):
     image_sets = []
     for name in namesList:
         if name['gender'] == 'Male':
-            for i in range(201):
+            for i in range(61):
                 face_type = df.iloc[[i]]['type'].values[0]
                 face_idx = df.iloc[[i]]['face_number'].values[0]
                 if (face_type == 'men') and (face_idx not in image_sets):
                     image_sets.append(face_idx)
                     break
         elif name['gender'] == 'Female':
-            for i in range(201):
+            for i in range(61):
                 face_type = df.iloc[[i]]['type'].values[0]
                 face_idx = df.iloc[[i]]['face_number'].values[0]
                 if (face_type == 'women') and (face_idx not in image_sets):
@@ -188,10 +188,7 @@ def createFacesPattern(namesList):
 
 def createUserMovieNamePattern(id):
     try:
-        print("------------------------------------")
-        print(movies_count)
-        print("------------------------------------")
-        randomMovieslist = random.sample(range(movies_count), movies_count)
+        randomMovieslist = random.sample(range(1,movies_count+1), movies_count)
         raceProbabilities = {'White':60,'Hispanic':20,'Black':13,'Asian':7}
         namesList = []
         random.shuffle(whiteNames)
