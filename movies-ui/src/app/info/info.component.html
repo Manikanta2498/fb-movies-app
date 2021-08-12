@@ -92,7 +92,7 @@
                             </nz-select>
                             </nz-form-control>
                         </nz-form-item>
-                        <p>We need to know how you usually access the internet. In this case, however, we want to check that people take the time they need to read the instructions. To show that you’ve read carefully, please ignore the question below and simply select the response category "I do not have access to the internet" to move on to the next question.</p>
+                        <!--<p>We need to know how you usually access the internet. In this case, however, we want to check that people take the time they need to read the instructions. To show that you’ve read carefully, please ignore the question below and simply select the response category "I do not have access to the internet" to move on to the next question.</p>
                         <nz-form-item>
                             <nz-form-label nzFor="internet" nzRequired>How do you usually access the internet?</nz-form-label>
                             <nz-form-control [nzSpan]="12" nzErrorTip="Please select your choice!">
@@ -105,7 +105,7 @@
                                 <nz-option nzValue="4" nzLabel="I do not have access to the internet"></nz-option>
                             </nz-select>
                             </nz-form-control>
-                        </nz-form-item>
+                        </nz-form-item>-->
                         <nz-form-item>
                             <nz-form-control>
                                 <button nz-button nzType="primary">Submit<i nz-icon nzType="right"></i></button>
@@ -122,7 +122,7 @@
     <div nz-row nzJustify="center">
         <div nz-col nzSpan="22">
             <nz-card nzTitle="Instructions">
-                <div [innerHTML]="dynamic_instructions"></div>
+                <div style="padding-left:20%;" [innerHTML]="dynamic_instructions"></div>
             </nz-card>
         </div>
     </div>

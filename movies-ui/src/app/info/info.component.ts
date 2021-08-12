@@ -33,18 +33,13 @@ export class InfoComponent implements OnInit {
       this.validateForm.controls[i].updateValueAndValidity();
     }
     if(this.validateForm.valid){
-      if (this.validateForm.value['internet'] != '4'){
-        this.router.navigate(['/exit']);
-      }
-      else{
-        var date = new Date();
-        this.validateForm.value['user_id'] = this.user_id;
-        this.validateForm.value['user_entry_time'] = date.toISOString();
-        this.infoservice.postInfo(this.validateForm.value).subscribe({
-          next: data =>{}
-        }); 
-        this.instructions = true;
-      }
+      var date = new Date();
+      this.validateForm.value['user_id'] = this.user_id;
+      this.validateForm.value['user_entry_time'] = date.toISOString();
+      this.infoservice.postInfo(this.validateForm.value).subscribe({
+        next: data =>{}
+      }); 
+      this.instructions = true;
     }
     else{
       console.log(this.validateForm.value);
@@ -73,7 +68,6 @@ export class InfoComponent implements OnInit {
     window.scroll(0,0);
     this.validateForm = this.fb.group({
       age: [null, [this.ageRangeValidator]],
-      internet: [null, [Validators.required]],
       race: [null, [Validators.required]],
       gender: [null, [Validators.required]],
       study: [null, [Validators.required]],

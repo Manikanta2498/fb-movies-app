@@ -4,10 +4,10 @@
             <nz-card nzTitle="BEFORE WE START">
                 <div nz-row nzJustify="center">
                     <div *ngIf="time_choice">
-                        <div class="text" [innerHTML]="preconnect1"></div>
+                        <div nz-row nzJustify="center" class="text" [innerHTML]="preconnect1"></div>
                     </div>
                     <div *ngIf="!time_choice">
-                        <div class="text" [innerHTML]="preconnect2"></div>
+                        <div nz-row nzJustify="center" class="text" [innerHTML]="preconnect2"></div>
                     </div>
                 </div>
             </nz-card>
