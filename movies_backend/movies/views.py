@@ -273,7 +273,7 @@ def getMovies(data):
         for i in range(index,index+3):
             movies_indexes.append(moviesList[i])
         UserPattern.objects.filter(user_id=user_id).update(movie_index = index+3)
-        movies = [model_to_dict(Movie.objects.get(id=movie_id)) for movie_id in movies_indexes]
+        movies = [model_to_dict(Movie.objects.get(id=movie_id+137)) for movie_id in movies_indexes]
         return JsonResponse(movies,safe=False)
     except Exception as e:
         print(e)
@@ -351,7 +351,7 @@ def createUpdatedMovies(request):
                     title=data.iloc[[i]]['Title'].values[0],
                     review=data.iloc[[i]]['Review'].values[0],
                     link=data.iloc[[i]]['link'].values[0],
-                    rating=data.iloc[[i]]['Rating'].values[0],
+                    rating=int(data.iloc[[i]]['Rating'].values[0]),
                     image_url=data.iloc[[i]]['image_link'].values[0],
                     length = data.iloc[[i]]['Length'].values[0],
                     genre = data.iloc[[i]]['Genre'].values[0],
