@@ -340,3 +340,25 @@ def createMovies(request):
     except ValueError as e:
         print("----Error----")
         return response(e.args[0])
+
+@api_view(["GET"])      
+def createUpdatedMovies(request):
+    try:
+        data = pd.read_csv('DB_Data/movies.csv')
+        for i in range(len(data)):
+            # print(data.iloc[[i]]['Title'].values[0])
+            movie_instance = Movie.objects.create(
+                    title=data.iloc[[i]]['Title'].values[0],
+                    review=data.iloc[[i]]['Review'].values[0],
+                    link=data.iloc[[i]]['link'].values[0],
+                    rating=data.iloc[[i]]['Rating'].values[0],
+                    image_url=data.iloc[[i]]['image_link'].values[0],
+                    length = data.iloc[[i]]['Length'].values[0],
+                    genre = data.iloc[[i]]['Genre'].values[0],
+                    release_date = data.iloc[[i]]['Released_date'].values[0],
+                    )
+
+        return JsonResponse('Movies created!',safe=False)
+    except ValueError as e:
+        print("----Error----")
+        return response(e.args[0])

@@ -138,15 +138,16 @@ export class SurveyComponent implements OnInit {
        for(var i=0;i<3;i++){
         this.names.push(data[i]);
        }
-       this.surveyService.getFaces(this.user_id).subscribe({
-        next: data =>{
-          for(var i=0;i<3;i++){
-            this.faces.push(data[i]);
-          }
-          this.fetchAll(this.names_index);
-          this.names_index += 3;
-          }
-        }); 
+       this.names_index += 3;
+      //  this.surveyService.getFaces(this.user_id).subscribe({
+      //   next: data =>{
+      //     for(var i=0;i<3;i++){
+      //       this.faces.push(data[i]);
+      //     }
+      //     this.fetchAll(this.names_index);
+      //     this.names_index += 3;
+      //     }
+      //   }); 
       }
     }); 
     this.movies_index += 3;
@@ -233,12 +234,12 @@ export class SurveyComponent implements OnInit {
             this.names = data;
             this.names_index += 3;
             console.log(this.names)
-            this.surveyService.getFaces(this.user_id).subscribe({
-              next: data =>{
-                this.faces = data;
-                this.fetchAll(0);
-              }
-            }); 
+            // this.surveyService.getFaces(this.user_id).subscribe({
+            //   next: data =>{
+            //     this.faces = data;
+            //     this.fetchAll(0);
+            //   }
+            // }); 
           }
         }); 
       },
