@@ -273,7 +273,7 @@ def getMovies(data):
         for i in range(index,index+3):
             movies_indexes.append(moviesList[i])
         UserPattern.objects.filter(user_id=user_id).update(movie_index = index+3)
-        movies = [model_to_dict(Movie.objects.get(id=movie_id+137)) for movie_id in movies_indexes]
+        movies = [model_to_dict(Movie.objects.get(id=movie_id+206)) for movie_id in movies_indexes]
         return JsonResponse(movies,safe=False)
     except Exception as e:
         print(e)
@@ -344,7 +344,7 @@ def createMovies(request):
 @api_view(["GET"])      
 def createUpdatedMovies(request):
     try:
-        data = pd.read_csv('DB_Data/movies.csv')
+        data = pd.read_csv('DB_Data/trim_movies.csv')
         for i in range(len(data)):
             # print(data.iloc[[i]]['Title'].values[0])
             movie_instance = Movie.objects.create(
