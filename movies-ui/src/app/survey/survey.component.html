@@ -86,7 +86,7 @@
                     </div>
                 </nz-modal>
             </div>
-            <div nz-row nzJustify="center" style="padding-top:30px;">
+            <div nz-row nzJustify="center" style="padding-top:30px;" *ngIf="movies_left">
                 <button nz-button 
                         nzType="primary" 
                         style="background-color:green;" 
@@ -95,6 +95,11 @@
                         {{load_button_text}}
                         <i nz-icon nzType="plus-circle" nzTheme="outline"></i>
                 </button>
+            </div>
+            <div nz-row nzJustify="center" nzAlign="middle" style="padding-top:30px;" *ngIf="!movies_left">
+                <div nz-col nzSpan="4">
+                    <i><h2>End of Movies!!</h2></i>
+                </div>
             </div>
             <br/><br/>
         </nz-content>

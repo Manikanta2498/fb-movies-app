@@ -118,6 +118,8 @@ export class SurveyComponent implements OnInit {
       this.router.navigate(['/feedback'],navigationExtras);
     });
   }
+
+  movies_left: boolean = true;
   loadMore(){
     this.load_button_text = 'Loading'
     this.isLoading = true;
@@ -128,9 +130,14 @@ export class SurveyComponent implements OnInit {
     var ind = this.movies_index;
     this.surveyService.getMovies(this.user_id).subscribe({
       next: data =>{
-        for(var i=0;i<3;i++){
-          this.movies.push(data[i]);
-         }
+        if (data.length == 0){
+          this.movies_left = false;
+        }
+        else{
+          for(var i=0;i<3;i++){
+            this.movies.push(data[i]);
+           }
+        }
       }
     }); 
     this.surveyService.getNames(this.user_id).subscribe({
