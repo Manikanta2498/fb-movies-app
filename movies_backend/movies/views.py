@@ -189,7 +189,7 @@ def createFacesPattern(namesList):
 def createUserMovieNamePattern(id):
     try:
         randomMovieslist = random.sample(range(1,movies_count+1), movies_count)
-        raceProbabilities = {'White':60,'Hispanic':20,'Black':13,'Asian':7}
+        raceProbabilities = {'White':64,'Hispanic':22,'Black':14,'Asian':0}
         namesList = []
         random.shuffle(whiteNames)
         random.shuffle(hispanicNames)
@@ -201,7 +201,7 @@ def createUserMovieNamePattern(id):
             namesList.append(hispanicNames[i])
         for i in range(int(movies_count*raceProbabilities['Black']/100)+1):
             namesList.append(blackNames[i])
-        for i in range(int(movies_count*raceProbabilities['Asian']/100)+1):
+        for i in range(int(movies_count*raceProbabilities['Asian']/100)):
             namesList.append(asianNames[i])
         random.shuffle(namesList)
         image_sets = createFacesPattern(namesList)
