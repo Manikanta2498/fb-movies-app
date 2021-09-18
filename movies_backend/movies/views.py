@@ -13,8 +13,13 @@ import pandas as pd
 import time
 
 IPs = []
-images_path = "M:/MS_STUDY/RA/MOVIE/selected gan faces/"
-df = pd.read_csv('selected_faces.csv',usecols=['face_number','type'])
+
+# Local
+# images_path = "M:/MS_STUDY/RA/MOVIE/selected gan faces/"
+# df = pd.read_csv('selected_faces.csv',usecols=['face_number','type'])
+
+images_path = "/home/ubuntu/MOVIES/selected_images/"
+df = pd.read_csv('/home/ubuntu/MOVIES/fb-movies-app/movies_backend/selected_faces.csv',usecols=['face_number','type'])
 
 def index(request):
     return HttpResponse("Hello, world. You're at the Movies index.")
