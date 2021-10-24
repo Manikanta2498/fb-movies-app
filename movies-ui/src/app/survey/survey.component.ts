@@ -220,11 +220,12 @@ export class SurveyComponent implements OnInit {
       next: data =>{
         if(this.time_choice) {
           this.deadline = Date.now() + 1000 * data['survey_time'] + 5000;
+          this.target_movie_count = data['movies_select_count'];
         }
         else{
           this.deadline = Date.now() + 1000 * data['survey_time_2'] + 5000;
+          this.target_movie_count = data['movies_select_count_2'];
         }
-        this.target_movie_count = data['movies_select_count'];
       }
     }); 
     setTimeout(() => 

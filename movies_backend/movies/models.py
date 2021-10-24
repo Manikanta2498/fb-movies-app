@@ -9,6 +9,7 @@ class Dynamic(models.Model):
     survey_time = models.IntegerField(null=True)
     survey_time_2 = models.IntegerField(null=True)
     movies_select_count = models.IntegerField(null=True)
+    movies_select_count_2 = models.IntegerField(null=True)
 
 class Movie(models.Model):
     title = models.CharField(max_length=100)
