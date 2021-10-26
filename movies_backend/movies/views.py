@@ -136,7 +136,11 @@ def postUserInfo(data):
             user_genre = info["genre"],
             user_entry_time = info["user_entry_time"],
         )
-        createUserMovieNamePattern(info["user_id"])
+        timed = 1 if info["time_choice"] == True else 0
+        user = User.objects.get(user_id=info["user_id"])
+        user.test_type = timed
+        user.save()
+        createUserMovieNamePattern(info["user_id"],timed)
         return JsonResponse('Post Info Success',safe=False)
     except Exception as e:
         print(e)
@@ -191,8 +195,12 @@ def createFacesPattern(namesList):
                     break
     return image_sets
 
-def createUserMovieNamePattern(id):
+def createUserMovieNamePattern(id,timed):
     try:
+        if timed == 1:
+            movies_count = model_to_dict(Dynamic.objects.first())['total_movies_time_1']
+        else:
+            movies_count = model_to_dict(Dynamic.objects.first())['total_movies_time_2']
         randomMovieslist = random.sample(range(1,movies_count+1), movies_count)
         raceProbabilities = {'White':64,'Hispanic':22,'Black':14,'Asian':0}
         namesList = []

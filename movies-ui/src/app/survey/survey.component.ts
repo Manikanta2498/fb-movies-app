@@ -220,12 +220,11 @@ export class SurveyComponent implements OnInit {
       next: data =>{
         if(this.time_choice) {
           this.deadline = Date.now() + 1000 * data['survey_time'] + 5000;
-          this.target_movie_count = data['movies_select_count'];
         }
         else{
           this.deadline = Date.now() + 1000 * data['survey_time_2'] + 5000;
-          this.target_movie_count = data['movies_select_count_2'];
         }
+        this.target_movie_count = data['movies_select_count'];
       }
     }); 
     setTimeout(() => 
@@ -234,14 +233,12 @@ export class SurveyComponent implements OnInit {
           next: data =>{
             this.movies = data;
             this.movies_index += 3;
-            console.log(this.movies)
           }
         }); 
         this.surveyService.getNames(this.user_id).subscribe({
           next: data =>{
             this.names = data;
             this.names_index += 3;
-            console.log(this.names)
             // this.surveyService.getFaces(this.user_id).subscribe({
             //   next: data =>{
             //     this.faces = data;

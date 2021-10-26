@@ -17,6 +17,7 @@ export class PreconnectComponent implements OnInit {
   constructor(private router: Router,private route: ActivatedRoute,private preconnectService: PreconnectService) {
     this.route.queryParams.subscribe(params => {
       this.user_id = params['user_id'];
+      this.time_choice = params['time_choice'];
       this.dynamic_content = JSON.parse(params['dynamic_content']);
       this.preconnect1 = this.dynamic_content['preconnect1'];
       this.preconnect2 = this.dynamic_content['preconnect2'];
@@ -35,13 +36,6 @@ export class PreconnectComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.time_choice = Math.random() >= 0.5;
-    var survey_data: any = {};
-    survey_data['user_id'] = this.user_id;
-    survey_data['time_choice'] = this.time_choice;
-    this.preconnectService.postUserTestType(survey_data).subscribe({
-      next: data =>{}
-    }); 
   }
 
 }

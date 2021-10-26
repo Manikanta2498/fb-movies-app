@@ -16,6 +16,7 @@ export class InfoComponent implements OnInit {
   selectedRace = null;
   validateForm!: FormGroup;
   instructions: boolean = false;
+  time_choice: boolean;
 
   constructor(private fb: FormBuilder,
               private router: Router,
@@ -36,6 +37,7 @@ export class InfoComponent implements OnInit {
       var date = new Date();
       this.validateForm.value['user_id'] = this.user_id;
       this.validateForm.value['user_entry_time'] = date.toISOString();
+      this.validateForm.value['time_choice'] = this.time_choice;
       this.infoservice.postInfo(this.validateForm.value).subscribe({
         next: data =>{}
       }); 
@@ -50,7 +52,8 @@ export class InfoComponent implements OnInit {
     let navigationExtras: NavigationExtras = {
       queryParams: {
         "user_id":this.user_id,
-        "dynamic_content": JSON.stringify(this.dynamic_content)
+        "dynamic_content": JSON.stringify(this.dynamic_content),
+        "time_choice": this.time_choice
       },
       skipLocationChange: true,
     };
@@ -65,6 +68,7 @@ export class InfoComponent implements OnInit {
     return null;
   }
   ngOnInit(): void {
+    this.time_choice = Math.random() >= 0.5;
     window.scroll(0,0);
     this.validateForm = this.fb.group({
       age: [null, [this.ageRangeValidator]],
