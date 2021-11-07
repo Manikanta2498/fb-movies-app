@@ -11,6 +11,8 @@ class Dynamic(models.Model):
     movies_select_count = models.IntegerField(null=True)
     total_movies_time_1 = models.IntegerField(null=True)
     total_movies_time_2 = models.IntegerField(null=True)
+    load_more_time_1 = models.CharField(max_length=50,default='Load More')
+    load_more_time_2 = models.CharField(max_length=50,default='Load More')
 
 class Movie(models.Model):
     title = models.CharField(max_length=100)
@@ -33,13 +35,13 @@ class Lname(models.Model):
 
 class User(models.Model):
     user_id = models.CharField(max_length=10)
-    user_race = models.CharField(max_length=200)
-    user_gender = models.CharField(max_length=6)
-    user_age = models.IntegerField()
-    user_education = models.CharField(max_length=200)
-    user_frequency = models.CharField(max_length=200)
-    user_genre = models.CharField(max_length=200)
-    user_race = models.CharField(max_length=200)
+    user_race = models.CharField(max_length=200,null=True)
+    user_gender = models.CharField(max_length=6,null=True)
+    user_age = models.IntegerField(null=True)
+    user_education = models.CharField(max_length=200,null=True)
+    user_frequency = models.CharField(max_length=200,null=True)
+    user_genre = models.CharField(max_length=200,null=True)
+    user_race = models.CharField(max_length=200,null=True)
     test_type = models.IntegerField(null=True)
     user_entry_time = models.DateTimeField()
     time_spent = models.CharField(max_length=200,null=True)

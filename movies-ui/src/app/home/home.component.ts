@@ -16,18 +16,22 @@ export class HomeComponent implements OnInit {
   dynamic_content: any;
   consent_page: boolean = true;
   checkbox_checked: boolean = false;
+  time_choice: boolean;
   constructor(private homeService: HomeService,
               private notification: NzNotificationService,
               private router: Router) { }
 
   instructions(){
     let navigationExtras: NavigationExtras = {
-      queryParams: {"user_id":this.user_id,"dynamic_content": JSON.stringify(this.dynamic_content)},
+      queryParams: {"user_id":this.user_id,
+                    "time_choice": this.time_choice,
+                    "dynamic_content": JSON.stringify(this.dynamic_content)},
       skipLocationChange: true,
     };
-    this.router.navigate(['/info'],navigationExtras);
+    this.router.navigate(['/preconnect'],navigationExtras);
   }
   ngOnInit(){
+    this.time_choice = Math.random() >= 0.5;
     this.router.navigateByUrl('', { skipLocationChange: true });
     this.homeService.getUserID().subscribe({
       next: data => {

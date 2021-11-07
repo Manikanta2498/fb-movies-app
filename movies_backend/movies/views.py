@@ -15,7 +15,7 @@ import time
 IPs = []
 
 # Local
-images_path = "M:/MS_STUDY/RA/MOVIE/selected gan faces/"
+# images_path = "M:/MS_STUDY/RA/MOVIE/selected gan faces/"
 df = pd.read_csv('selected_faces.csv',usecols=['face_number','type'])
 
 # images_path = "/home/ubuntu/MOVIES/selected_images/"
@@ -122,18 +122,11 @@ def postMovieLink(data):
         return JsonResponse('Post Movie Link Failed',safe=False)
 
 @api_view(["POST"])
-def postUserInfo(data):
+def postNewUser(data):
     info = json.loads(data.body.decode("utf-8"))
-    races = ','.join(name for name in info['race'])
     try:
         user_instance = User.objects.create(
             user_id = info["user_id"],
-            user_race = races,
-            user_gender = info["gender"],
-            user_age = info["age"],
-            user_education = info["study"],
-            user_frequency = info["frequency"],
-            user_genre = info["genre"],
             user_entry_time = info["user_entry_time"],
         )
         timed = 1 if info["time_choice"] == True else 0
@@ -145,7 +138,28 @@ def postUserInfo(data):
     except Exception as e:
         print(e)
         return JsonResponse('Post Info Failed',safe=False)
-    
+
+@api_view(["POST"])
+def postUserInfo(data):
+    info = json.loads(data.body.decode("utf-8"))
+    races = ','.join(name for name in info['race'])
+    try:
+        timed = 1 if info["time_choice"] == True else 0
+        user = User.objects.get(user_id=info["user_id"])
+        user.test_type = timed
+        user.user_race = races
+        user.user_gender = info["gender"]
+        user.user_age = info["age"]
+        user.user_education = info["study"]
+        user.user_frequency = info["frequency"]
+        user.user_genre = info["genre"]
+        user.save()
+        return JsonResponse('Post Info Success',safe=False)
+    except Exception as e:
+        print(e)
+        return JsonResponse('Post Info Failed',safe=False)
+  
+
 movies_count = len(Movie.objects.all())
 fnames_count = len(Fname.objects.all())
 whiteNames = []
@@ -172,7 +186,7 @@ random.shuffle(hispanicNames)
 random.shuffle(blackNames)
 random.shuffle(asianNames)
 
-onlyfiles = [f for f in listdir(images_path) if isfile(join(images_path, f))]
+# onlyfiles = [f for f in listdir(images_path) if isfile(join(images_path, f))]
 pattern = '_#\d*_'
 exclude_files = [8,41,37,79,80,95,98,111,104,125,140,153,144,143,154,163,177,194,221,256,271,280,287,288,300,313,314,315,320,321,333,350]
 

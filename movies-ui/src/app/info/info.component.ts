@@ -17,6 +17,7 @@ export class InfoComponent implements OnInit {
   validateForm!: FormGroup;
   instructions: boolean = false;
   time_choice: boolean;
+  movie_links: any;
 
   constructor(private fb: FormBuilder,
               private router: Router,
@@ -24,8 +25,13 @@ export class InfoComponent implements OnInit {
               private infoservice: InfoService) {
     this.route.queryParams.subscribe(params => {
       this.user_id = params['user_id'];
-      this.dynamic_content = JSON.parse(params['dynamic_content']);
-      this.dynamic_instructions = this.dynamic_content['instructions'];
+      this.movie_links = params['movie_links'];
+      if (params['time_choice'] == "true"){
+        this.time_choice = true;
+      }
+      else{ 
+        this.time_choice = false;
+      }
     });
   }
   submitForm(): void {
@@ -36,12 +42,11 @@ export class InfoComponent implements OnInit {
     if(this.validateForm.valid){
       var date = new Date();
       this.validateForm.value['user_id'] = this.user_id;
-      this.validateForm.value['user_entry_time'] = date.toISOString();
       this.validateForm.value['time_choice'] = this.time_choice;
       this.infoservice.postInfo(this.validateForm.value).subscribe({
         next: data =>{}
       }); 
-      this.instructions = true;
+      this.confirm();
     }
     else{
       console.log(this.validateForm.value);
@@ -52,12 +57,11 @@ export class InfoComponent implements OnInit {
     let navigationExtras: NavigationExtras = {
       queryParams: {
         "user_id":this.user_id,
-        "dynamic_content": JSON.stringify(this.dynamic_content),
-        "time_choice": this.time_choice
+        "movie_links":this.movie_links
       },
       skipLocationChange: true,
     };
-    this.router.navigate(['/preconnect'],navigationExtras);
+    this.router.navigate(['/feedback'],navigationExtras);
   }
 
   ageRangeValidator(control: AbstractControl): { [key: string]: boolean } | null {
@@ -68,7 +72,6 @@ export class InfoComponent implements OnInit {
     return null;
   }
   ngOnInit(): void {
-    this.time_choice = Math.random() >= 0.5;
     window.scroll(0,0);
     this.validateForm = this.fb.group({
       age: [null, [this.ageRangeValidator]],

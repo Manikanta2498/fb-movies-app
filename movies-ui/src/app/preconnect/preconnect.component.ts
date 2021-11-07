@@ -1,5 +1,6 @@
 import { Component, HostListener, OnInit } from '@angular/core';
 import { ActivatedRoute, NavigationExtras, Router } from '@angular/router';
+import { InfoService } from '../info/info.service';
 import { PreconnectService } from './preconnect.service';
 
 @Component({
@@ -14,10 +15,17 @@ export class PreconnectComponent implements OnInit {
   preconnect2: any;
   user_id: string;
   time_choice: boolean;
-  constructor(private router: Router,private route: ActivatedRoute,private preconnectService: PreconnectService) {
+  constructor(private router: Router,
+            private route: ActivatedRoute,
+            private preconnectService: PreconnectService) {
     this.route.queryParams.subscribe(params => {
       this.user_id = params['user_id'];
-      this.time_choice = params['time_choice'];
+      if (params['time_choice'] == "true"){
+        this.time_choice = true;
+      }
+      else{ 
+        this.time_choice = false;
+      }
       this.dynamic_content = JSON.parse(params['dynamic_content']);
       this.preconnect1 = this.dynamic_content['preconnect1'];
       this.preconnect2 = this.dynamic_content['preconnect2'];
@@ -25,6 +33,12 @@ export class PreconnectComponent implements OnInit {
   }
 
   confirm(): void {
+    var form = {'user_id': this.user_id,
+                'time_choice': this.time_choice,
+                'user_entry_time': new Date().toISOString()};
+    this.preconnectService.postInfo(form).subscribe({
+      next: data =>{}
+    });
     let navigationExtras: NavigationExtras = {
       queryParams: {
         "user_id":this.user_id,

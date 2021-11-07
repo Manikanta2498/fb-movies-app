@@ -14,7 +14,7 @@ export class SurveyComponent implements OnInit {
 
   deadline: any; 
   target_movie_count: number;         //Number of movies user is required to select
-  load_button_text: string = 'Load More';
+  load_button_text: string;
   isLoading: boolean = false;
   time_choice: boolean = true;        //Show milliseconds if true
   movies: any[];                      //Movies fetched from Backend
@@ -53,7 +53,7 @@ export class SurveyComponent implements OnInit {
     this.review_heading = this.names[this.review_index]['fname']+' '+this.names[this.review_index]['lname']+"'s review of "+this.movies[this.review_index]['title'];
   }
   add(i): void {
-    if (this.movies_count == this.target_movie_count){
+    if (!this.time_choice && this.movies_count == this.target_movie_count){
       const modal = this.modalService.warning({
         nzTitle: 'You have already selected '+this.target_movie_count+' movies, remove a selection or Submit',
         nzContent: ''
@@ -87,6 +87,7 @@ export class SurveyComponent implements OnInit {
       else{ 
         this.time_choice = false;
       }
+      console.log(this.user_id, this.time_choice);
     });
   }
 
@@ -100,13 +101,20 @@ export class SurveyComponent implements OnInit {
       survey_data['movies_selected'] = this.movies_selected;
       var date = new Date();
       survey_data['timestamp'] = date.toISOString();
-      console.log(survey_data);
     this.surveyService.postSurveyData(survey_data).subscribe({
       next: data =>{}
     }); 
+    var movie_links = [];
+    for(var i in this.movies_selected){
+      if (this.movies_selected[i] == true){
+        movie_links.push(this.movies[parseInt(i)]['link']);
+      }
+    }
     let navigationExtras: NavigationExtras = {
       queryParams: {
         "user_id":this.user_id,
+        "time_choice": this.time_choice,
+        "movie_links": movie_links
       },
       skipLocationChange: true,
     };
@@ -115,7 +123,7 @@ export class SurveyComponent implements OnInit {
       nzContent: ''
     });
     this.zone.run(() => {
-      this.router.navigate(['/feedback'],navigationExtras);
+      this.router.navigate(['/info'],navigationExtras);
     });
   }
 
@@ -163,41 +171,79 @@ export class SurveyComponent implements OnInit {
   }
   submit() {
     console.log(this.movies_selected);
-    if (this.movies_count < this.target_movie_count){
-      const modal = this.modalService.warning({
-        nzTitle: 'You have not selected '+this.target_movie_count+' movies, please select atleast '+this.target_movie_count+' movies to Submit',
-        nzContent: ''
-      });
+    if (this.time_choice == true){
+      if (this.movies_count < 1){
+        const modal = this.modalService.warning({
+          nzTitle: 'You have not selected any movies, please select atleast 1 movie to Submit',
+          nzContent: ''
+        });
+      }
+      else{
+        var survey_data: any = {};
+        survey_data['user_id'] = this.user_id;
+        survey_data['movie_data'] = this.movies.slice(0, this.movies_index);
+        survey_data['movies_reviewed'] = this.movies_reviewed;
+        survey_data['time_choice'] = this.time_choice;
+        survey_data['name_data'] = this.names.slice(0, this.names_index);
+        survey_data['movies_selected'] = this.movies_selected;
+        var date = new Date();
+        survey_data['timestamp'] = date.toISOString();
+        this.surveyService.postSurveyData(survey_data).subscribe({
+          next: data =>{}
+        }); 
+        var movie_links = [];
+        for(var i in this.movies_selected){
+            if (this.movies_selected[i] == true){
+                movie_links.push(this.movies[parseInt(i)]['link']);
+            }
+        }
+        let navigationExtras: NavigationExtras = {
+          queryParams: {
+            "time_choice":this.time_choice,
+            "user_id":this.user_id,
+            "movie_links":movie_links,
+          },
+          skipLocationChange: true,
+        };
+        this.router.navigate(['/info'],navigationExtras);
+      }
     }
     else{
-      var survey_data: any = {};
-      survey_data['user_id'] = this.user_id;
-      survey_data['movie_data'] = this.movies.slice(0, this.movies_index);
-      survey_data['movies_reviewed'] = this.movies_reviewed;
-      survey_data['time_choice'] = this.time_choice;
-      survey_data['name_data'] = this.names.slice(0, this.names_index);
-      survey_data['movies_selected'] = this.movies_selected;
-      var date = new Date();
-      survey_data['timestamp'] = date.toISOString();
-      console.log(survey_data);
-      this.surveyService.postSurveyData(survey_data).subscribe({
-        next: data =>{}
-      }); 
-      var movie_links = [];
-      for(var i in this.movies_selected){
-          if (this.movies_selected[i] == true){
-              movie_links.push(this.movies[parseInt(i)]['link']);
-          }
+      if (this.movies_count < this.target_movie_count){
+        const modal = this.modalService.warning({
+          nzTitle: 'You have not selected '+this.target_movie_count+' movies, please select atleast '+this.target_movie_count+' movies to Submit',
+          nzContent: ''
+        });
       }
-      let navigationExtras: NavigationExtras = {
-        queryParams: {
-          "time_choice":this.time_choice,
-          "user_id":this.user_id,
-          "movie_links":movie_links,
-        },
-        skipLocationChange: true,
-      };
-      this.router.navigate(['/feedback'],navigationExtras);
+      else{
+        var survey_data: any = {};
+        survey_data['user_id'] = this.user_id;
+        survey_data['movie_data'] = this.movies.slice(0, this.movies_index);
+        survey_data['movies_reviewed'] = this.movies_reviewed;
+        survey_data['time_choice'] = this.time_choice;
+        survey_data['name_data'] = this.names.slice(0, this.names_index);
+        survey_data['movies_selected'] = this.movies_selected;
+        var date = new Date();
+        survey_data['timestamp'] = date.toISOString();
+        this.surveyService.postSurveyData(survey_data).subscribe({
+          next: data =>{}
+        }); 
+        var movie_links = [];
+        for(var i in this.movies_selected){
+            if (this.movies_selected[i] == true){
+                movie_links.push(this.movies[parseInt(i)]['link']);
+            }
+        }
+        let navigationExtras: NavigationExtras = {
+          queryParams: {
+            "time_choice":this.time_choice,
+            "user_id":this.user_id,
+            "movie_links":movie_links,
+          },
+          skipLocationChange: true,
+        };
+        this.router.navigate(['/info'],navigationExtras);
+      }
     }
   }
   fetchImg(data) {
@@ -220,9 +266,11 @@ export class SurveyComponent implements OnInit {
       next: data =>{
         if(this.time_choice) {
           this.deadline = Date.now() + 1000 * data['survey_time'] + 5000;
+          this.load_button_text = data['load_more_time_1'];
         }
         else{
           this.deadline = Date.now() + 1000 * data['survey_time_2'] + 5000;
+          this.load_button_text = data['load_more_time_2'];
         }
         this.target_movie_count = data['movies_select_count'];
       }
@@ -233,6 +281,7 @@ export class SurveyComponent implements OnInit {
           next: data =>{
             this.movies = data;
             this.movies_index += 3;
+            console.log(this.movies);
           }
         }); 
         this.surveyService.getNames(this.user_id).subscribe({
