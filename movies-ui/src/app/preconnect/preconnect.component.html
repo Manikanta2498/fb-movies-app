@@ -1,4 +1,4 @@
-<div>
+<div *ngIf="!instructions">
     <div nz-row nzJustify="center">
         <div nz-col nzSpan="20">
             <nz-card nzTitle="BEFORE WE START">
@@ -18,6 +18,25 @@
         <div nz-col>
             <div nz-row class="btn">
                 <button nz-button nzType="primary" (click)="confirm()">Start Survey<i nz-icon nzType="right"></i></button>
+            </div>
+        </div>
+    </div>
+    <div style="padding-top: 20px"></div>
+</div>
+
+<div *ngIf="instructions && dynamic_content">
+    <div nz-row nzJustify="center">
+        <div nz-col nzSpan="22">
+            <nz-card nzTitle="Instructions">
+                <div style="padding-left:20%;" [innerHTML]="dynamic_instructions"></div>
+            </nz-card>
+        </div>
+    </div>
+    <br>
+    <div nz-row nzJustify="center">
+        <div nz-col nzSpan="20">
+            <div nz-row class="btn">
+                <button nz-button nzType="primary" (click)="instructions_done()">Continue<i nz-icon nzType="right"></i></button>
             </div>
         </div>
     </div>

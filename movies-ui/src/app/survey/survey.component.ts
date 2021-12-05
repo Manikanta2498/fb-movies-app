@@ -172,9 +172,15 @@ export class SurveyComponent implements OnInit {
   submit() {
     console.log(this.movies_selected);
     if (this.time_choice == true){
-      if (this.movies_count < 1){
+      // if (this.movies_count < 1){
+      //   const modal = this.modalService.warning({
+      //     nzTitle: 'You have not selected any movies, please select atleast 1 movie to Submit',
+      //     nzContent: ''
+      //   });
+      // }
+      if (this.movies_count < this.target_movie_count){
         const modal = this.modalService.warning({
-          nzTitle: 'You have not selected any movies, please select atleast 1 movie to Submit',
+          nzTitle: 'You have not selected '+this.target_movie_count+' movies, please select '+this.target_movie_count+' movies to Submit',
           nzContent: ''
         });
       }
@@ -211,7 +217,7 @@ export class SurveyComponent implements OnInit {
     else{
       if (this.movies_count < this.target_movie_count){
         const modal = this.modalService.warning({
-          nzTitle: 'You have not selected '+this.target_movie_count+' movies, please select atleast '+this.target_movie_count+' movies to Submit',
+          nzTitle: 'You have not selected '+this.target_movie_count+' movies, please select '+this.target_movie_count+' movies to Submit',
           nzContent: ''
         });
       }

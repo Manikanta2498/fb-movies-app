@@ -15,6 +15,8 @@ export class PreconnectComponent implements OnInit {
   preconnect2: any;
   user_id: string;
   time_choice: boolean;
+  instructions: boolean = true;
+  dynamic_instructions: any;
   constructor(private router: Router,
             private route: ActivatedRoute,
             private preconnectService: PreconnectService) {
@@ -27,11 +29,15 @@ export class PreconnectComponent implements OnInit {
         this.time_choice = false;
       }
       this.dynamic_content = JSON.parse(params['dynamic_content']);
+      this.dynamic_instructions = this.dynamic_content['instructions'];
       this.preconnect1 = this.dynamic_content['preconnect1'];
       this.preconnect2 = this.dynamic_content['preconnect2'];
     });
   }
 
+  instructions_done(): void {
+    this.instructions = false;
+  }
   confirm(): void {
     var form = {'user_id': this.user_id,
                 'time_choice': this.time_choice,
