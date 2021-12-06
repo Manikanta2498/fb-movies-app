@@ -53,7 +53,7 @@ export class SurveyComponent implements OnInit {
     this.review_heading = this.names[this.review_index]['fname']+' '+this.names[this.review_index]['lname']+"'s review of "+this.movies[this.review_index]['title'];
   }
   add(i): void {
-    if (!this.time_choice && this.movies_count == this.target_movie_count){
+    if (this.movies_count == this.target_movie_count){
       const modal = this.modalService.warning({
         nzTitle: 'You have already selected '+this.target_movie_count+' movies, remove a selection or Submit',
         nzContent: ''
